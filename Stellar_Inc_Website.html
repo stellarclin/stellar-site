@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stellar Inc. — Post-Acute Clinical Reimbursement & Operations</title>
+<meta name="description" content="Stellar Inc. is an independent post-acute consulting practice specializing in clinical reimbursement integrity, documentation, and operations, grounded in national CMS standards.">
+<style>
+  :root{
+    --bg:#ffffff; --alt:#f5f8fc; --panel:#ffffff; --line:#e2e8f2;
+    --ink:#16202e; --muted:#5a6472; --faint:#8a94a3;
+    --navy:#1b2a4a; --accent:#2f6db3; --gold:#b8892b;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;
+    --wrap:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;letter-spacing:-.01em;color:var(--navy)}
+  .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+
+  /* NAV */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{font-family:var(--serif);font-size:1.4rem;font-weight:600;color:var(--navy);letter-spacing:.01em}
+  .brand span{color:var(--accent)}
+  .navlinks{display:flex;gap:34px;align-items:center}
+  .navlinks a{font-size:.92rem;color:var(--muted);font-weight:500;transition:color .15s;cursor:pointer}
+  .navlinks a:hover{color:var(--accent)}
+  .navcta{border:1px solid var(--navy);color:var(--navy)!important;padding:9px 18px;border-radius:6px;font-weight:600}
+  .navcta:hover{background:var(--navy);color:#fff!important}
+  .menubtn{display:none;background:none;border:0;font-size:1.5rem;color:var(--navy);cursor:pointer}
+
+  /* HERO */
+  .hero{background:linear-gradient(180deg,#fbfcfe 0%,#f1f5fb 100%);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(47,109,179,.08),transparent 70%)}
+  .hero .wrap{padding:104px 28px 92px;position:relative;z-index:1}
+  .hero h1{font-size:clamp(2.3rem,5vw,3.5rem);max-width:16ch;margin:18px 0 22px}
+  .hero .lead{font-size:1.2rem;color:var(--muted);max-width:56ch;margin-bottom:34px}
+  .btnrow{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:13px 26px;border-radius:7px;font-weight:600;font-size:.98rem;transition:all .15s;cursor:pointer}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.primary:hover{background:#24365c}
+  .btn.ghost{border:1px solid var(--line);color:var(--navy);background:#fff}
+  .btn.ghost:hover{border-color:var(--navy)}
+
+  /* SECTIONS */
+  section{padding:88px 0;scroll-margin-top:82px}
+  .sec-head{max-width:60ch;margin-bottom:52px}
+  .sec-head h2{font-size:clamp(1.8rem,3.4vw,2.4rem);margin:12px 0 14px}
+  .sec-head p{color:var(--muted);font-size:1.08rem}
+  .alt{background:var(--alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:start}
+  .about-grid p{margin-bottom:18px;color:#28323f;font-size:1.05rem}
+  .factcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 28px;box-shadow:0 1px 3px rgba(20,32,46,.04)}
+  .factcard .row{display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line)}
+  .factcard .row:last-child{border-bottom:0}
+  .factcard .k{color:var(--muted);font-size:.9rem}
+  .factcard .v{font-family:var(--serif);color:var(--navy);font-size:1.15rem;font-weight:600}
+
+  /* SERVICES */
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:30px 28px;transition:transform .15s,box-shadow .15s,border-color .15s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(20,32,46,.07);border-color:#cdd8e8}
+  .card .num{font-family:var(--serif);font-size:1.1rem;color:var(--gold);font-weight:600}
+  .card h3{font-size:1.25rem;margin:10px 0 10px}
+  .card p{color:var(--muted);font-size:.99rem}
+  .sizzle{position:relative;overflow:hidden;background:var(--navy);border-radius:18px;padding:46px 40px;text-align:center;margin-bottom:46px}
+  .sizzle::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% -10%,rgba(230,180,85,.16),transparent 62%);pointer-events:none}
+  .sizzle-line{position:relative;font-family:var(--serif);font-size:clamp(1.55rem,3.4vw,2.5rem);font-weight:600;color:#fff;line-height:1.18;letter-spacing:-.3px}
+  .sizzle-line span{color:#e6b455;font-style:italic}
+  .sizzle-line .tm{font-size:.4em;vertical-align:.75em;font-style:normal;font-weight:500;letter-spacing:.02em}
+  .sizzle-sub{position:relative;color:#c7d2e2;font-size:1.05rem;line-height:1.55;margin:16px auto 0;max-width:62ch}
+
+  /* APPROACH */
+  .approach{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:12px}
+  .astep .n{width:40px;height:40px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:600;margin-bottom:16px}
+  .astep h3{font-size:1.15rem;margin-bottom:8px}
+  .astep p{color:var(--muted);font-size:.98rem}
+  .standards{margin-top:40px;padding:22px 26px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;color:#28323f;font-size:1.02rem}
+
+  /* PRINCIPAL */
+  .principal{display:grid;grid-template-columns:auto 1fr;gap:40px;align-items:center}
+  .avatar{width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--accent));display:flex;align-items:center;justify-content:center;font-family:var(--serif);color:#fff;font-size:3rem;font-weight:600;flex-shrink:0;box-shadow:0 8px 24px rgba(27,42,74,.2)}
+  .principal h3{font-size:1.6rem;margin-bottom:4px}
+  .principal .title{color:var(--accent);font-weight:600;margin-bottom:16px;font-size:1rem}
+  .principal p{color:#28323f;max-width:62ch}
+  .creds{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .chip{background:#eef3fa;border:1px solid #dbe6f4;color:var(--navy);font-size:.82rem;font-weight:600;padding:6px 13px;border-radius:20px}
+
+  /* CONTACT */
+  .contact{background:var(--navy);color:#eef2f8;border:0}
+  .contact h2{color:#fff}
+  .contact .sec-head p{color:#b6c2d6}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  .contact .field{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.14)}
+  .contact .field .lab{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:#8ea3c4}
+  .contact .field .val{font-size:1.15rem;color:#fff;margin-top:4px}
+  .contact .val a:hover{color:#8ec5ff}
+  .note{font-size:.86rem;color:#8ea3c4;margin-top:18px}
+
+  footer{background:#0f1830;color:#9aa7bd;padding:34px 0;font-size:.88rem}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+
+  @media(max-width:860px){
+    .navlinks{position:fixed;inset:70px 0 auto 0;background:#fff;flex-direction:column;gap:0;border-bottom:1px solid var(--line);display:none;padding:10px 0}
+    .navlinks.open{display:flex}
+    .navlinks a{padding:14px 28px;width:100%}
+    .navcta{margin:10px 28px;text-align:center}
+    .menubtn{display:block}
+    .about-grid,.cards,.approach,.principal,.contact-grid{grid-template-columns:1fr}
+    .principal{text-align:center}.avatar{margin:0 auto}
+    section{padding:64px 0}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="brand">Stellar<span>&nbsp;Inc.</span></div>
+    <button class="menubtn" id="menubtn" aria-label="Menu">☰</button>
+    <div class="navlinks" id="navlinks">
+      <a data-scroll="about">About</a>
+      <a data-scroll="services">Expertise</a>
+      <a data-scroll="approach">Approach</a>
+      <a data-scroll="principal">Leadership</a>
+      <a data-scroll="contact" class="navcta">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Independent Post-Acute Consulting · Est. 2007</div>
+    <h1>Clinical reimbursement integrity for post-acute care.</h1>
+    <p class="lead">Stellar Inc. helps skilled nursing and post-acute providers align documentation, reimbursement, and operations with the standards that govern them — so the record supports the care and the care supports the claim.</p>
+    <div class="btnrow">
+      <a data-scroll="services" class="btn primary">Our expertise</a>
+      <a data-scroll="contact" class="btn ghost">Start a conversation</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <div class="eyebrow">About the firm</div>
+        <h2 style="font-size:clamp(1.8rem,3.4vw,2.4rem);margin:12px 0 20px">Two decades inside post-acute reimbursement and operations.</h2>
+        <p>Stellar Inc. is an independent consulting practice founded in 2007, focused exclusively on the clinical, regulatory, and reimbursement realities of post-acute care. We work at the intersection where clinical documentation, PDPM classification, and compliance meet — the place where revenue integrity is either protected or quietly lost.</p>
+        <p>Our work is grounded in the national standards that actually govern the setting — the CMS RAI Manual, 42 CFR Part 483, and PDPM — not in shortcuts or generic healthcare frameworks. The result is guidance a provider can act on and defend.</p>
+        <p>We operate with a fiduciary posture: candid advice, in the client's interest, with the risks and trade-offs named plainly.</p>
+      </div>
+      <div class="factcard">
+        <div class="row"><span class="k">Founded</span><span class="v">2007</span></div>
+        <div class="row"><span class="k">Focus</span><span class="v">Post-Acute</span></div>
+        <div class="row"><span class="k">Discipline</span><span class="v">Reimbursement Integrity</span></div>
+        <div class="row"><span class="k">Standard</span><span class="v">CMS · PDPM · 42 CFR 483</span></div>
+        <div class="row"><span class="k">Engagement</span><span class="v">Independent &amp; Confidential</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Expertise</div>
+      <h2>Where we do the most good.</h2>
+      <p>Focused capabilities across the reimbursement and operations lifecycle of a skilled nursing facility.</p>
+    </div>
+
+    <div class="sizzle">
+      <div class="sizzle-line">Documentation quality is the difference between <span>pennies or Benjamins<sup class="tm">™</sup>.</span></div>
+      <div class="sizzle-sub">The same day of care can be captured to support the record — or quietly lost to it. Closing that gap is the whole game, and it's where we do our best work.</div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>PDPM &amp; Reimbursement Integrity</h3>
+        <p>Ensuring the clinical picture, coding, and classification align — so payment reflects the care actually delivered and documented, and revenue isn't left on the table or exposed to recovery.</p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>Documentation &amp; Compliance</h3>
+        <p>Strengthening the clinical record against the RAI Manual and 42 CFR Part 483, so documentation is complete, corroborated, and defensible when it matters.</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>Clinical Operations &amp; Survey Readiness</h3>
+        <p>Building the workflows, competencies, and interdisciplinary structures that keep a facility both operationally sound and survey-ready — before a deficiency is written, not after.</p>
+      </div>
+      <div class="card">
+        <div class="num">04</div>
+        <h3>Regulatory &amp; Reimbursement Advisory</h3>
+        <p>Translating evolving CMS requirements into practical, current guidance for clinical and administrative leadership across the post-acute enterprise.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="approach">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Approach</div>
+      <h2>Standards first. Evidence always.</h2>
+      <p>A disciplined method that keeps recommendations grounded, current, and defensible.</p>
+    </div>
+    <div class="approach">
+      <div class="astep">
+        <div class="n">1</div>
+        <h3>Ground in the standard</h3>
+        <p>Every finding is measured against the public CMS standards that govern the setting — never against opinion or generic benchmarks.</p>
+      </div>
+      <div class="astep">
+        <div class="n">2</div>
+        <h3>Find the gap early</h3>
+        <p>We look for where the record and the classification diverge while it can still be corrected — not after a claim has hardened.</p>
+      </div>
+      <div class="astep">
+        <div class="n">3</div>
+        <h3>Build the discipline</h3>
+        <p>The goal is durable capability inside the organization — competencies and workflows that hold after the engagement ends.</p>
+      </div>
+    </div>
+    <div class="standards"><strong>Benchmarked to what governs the setting:</strong> CMS RAI Manual (incl. Section GG), 42 CFR Part 483, and PDPM. Guidance stays current as those standards evolve.</div>
+  </div>
+</section>
+
+<section id="principal" class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Leadership</div>
+      <h2>The mind behind the method.</h2>
+    </div>
+    <div class="principal">
+      <div class="avatar">TG</div>
+      <div>
+        <h3>Toni Glover, RN</h3>
+        <div class="title">Principal &amp; Founder</div>
+        <p>In post-acute care, whether a claim holds or falls can come down to a single line in the record. Toni has spent three decades reading those lines — as a nurse and as a former CMS surveyor — and she holds the same exacting standard on both sides of them: the care that is given, and the record that has to prove it.</p>
+        <p>That precision isn't academic — in documentation, detail is money. A single line, captured well or captured poorly, is the difference between what a facility earns and what it quietly loses. Practical by nature, Toni doesn't just point out the gap; she builds the system that closes it — turning close attention to the record into a method others can run.</p>
+        <div class="creds">
+          <span class="chip">Registered Nurse</span>
+          <span class="chip">Former CMS Surveyor</span>
+          <span class="chip">30 Years Post-Acute</span>
+          <span class="chip">Systems Problem-Solver</span>
+          <span class="chip">Builder &amp; Innovator</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow" style="color:#8ec5ff">Contact</div>
+      <h2>Let's talk about your record.</h2>
+      <p>For consulting engagements, partnership inquiries, or a confidential conversation.</p>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <div class="field"><div class="lab">Email</div><div class="val"><a href="mailto:toni@stellarclinical.com">toni@stellarclinical.com</a></div></div>
+      </div>
+      <div>
+        <div class="field"><div class="lab">Web</div><div class="val">stellarclinical.com</div></div>
+        <div class="field"><div class="lab">Engagement</div><div class="val">Independent · Confidential · Nationwide</div></div>
+        <p class="note">Inquiries are held in confidence. Stellar Inc. does not disclose client relationships.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Stellar Inc. · Post-acute clinical reimbursement &amp; operations.</div>
+    <div>Proprietary &amp; confidential.</div>
+  </div>
+</footer>
+
+<script>
+  var mb=document.getElementById('menubtn'), nl=document.getElementById('navlinks');
+  mb.addEventListener('click',function(){nl.classList.toggle('open');});
+  document.querySelectorAll('[data-scroll]').forEach(function(el){
+    el.addEventListener('click',function(e){
+      e.preventDefault();
+      var target=document.getElementById(el.getAttribute('data-scroll'));
+      if(target){target.scrollIntoView({behavior:'smooth',block:'start'});}
+      nl.classList.remove('open');
+    });
+  });
+</script>
+</body>
+</html>
