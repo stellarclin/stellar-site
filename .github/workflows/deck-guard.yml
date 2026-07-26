@@ -1,0 +1,85 @@
+# SENTINEL — Deck & Demo Integrity CI Guard
+# Install at: .github/workflows/deck-guard.yml  in  stellarclin/stellar-site
+#
+# Purpose: move demo verification to the PUBLISH ENDPOINT. On every push that touches a
+# deck file, this decodes the base64-embedded interactive demo and FAILS the check if any
+# deck carries a retired marker or is missing a required marker of the current
+# keyword-mapping demo. A failed check shows a red X on the commit and (if set as a required
+# status check in branch protection) can block the merge — so a stale deck cannot silently
+# reach the live site the way it did on 2026-07-26.
+#
+# No dependencies: uses only Python 3 (preinstalled on ubuntu-latest). Self-contained.
+
+name: Deck & Demo Integrity
+
+on:
+  push:
+    paths:
+      - "investor*.html"
+      - "provider*.html"
+      - "team*.html"
+  pull_request:
+    paths:
+      - "investor*.html"
+      - "provider*.html"
+      - "team*.html"
+  workflow_dispatch: {}   # allow manual run from the Actions tab
+
+jobs:
+  deck-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify deck demos are current
+        run: |
+          python3 - <<'PY'
+          import re, base64, glob, sys
+
+          RETIRED_UNIVERSAL = ["POC v1", "assignment group", "med-cart",
+                               "WOW browser", "nursing-station board", "shared board"]
+
+          DEMO_REQUIRED = ["ktag", "R-2N-071"]
+          DEMO_FORBIDDEN = ["R-1S-071", "R−" + "1S-071", "POC v1", "case-mix substantiation"]
+
+          deck_files = sorted(set(
+              glob.glob("investor*.html") + glob.glob("provider*.html") + glob.glob("team*.html")
+          ))
+          if not deck_files:
+              print("No deck files found to check."); sys.exit(0)
+
+          problems = []
+          for f in deck_files:
+              raw = open(f, encoding="utf-8", errors="ignore").read()
+              parts = [raw]
+              for m in re.findall(r'DEMO_B64="([^"]+)"', raw):
+                  try:
+                      parts.append(base64.b64decode(m).decode("utf-8", "ignore"))
+                  except Exception:
+                      problems.append(f"{f}: DEMO_B64 blob failed to decode")
+              blob = "\n".join(parts)
+
+              for bad in RETIRED_UNIVERSAL:
+                  if bad in blob:
+                      problems.append(f"{f}: contains RETIRED terminology {bad!r}")
+
+              if f.startswith("team") and 'DEMO_B64="' not in raw:
+                  problems.append(f"{f}: team deck is MISSING its DEMO_B64 role-view demo (stripped/blank)")
+
+              if 'DEMO_B64="' in raw:
+                  for need in DEMO_REQUIRED:
+                      if need not in blob:
+                          problems.append(f"{f}: role-view demo MISSING required marker {need!r} (stale/incomplete)")
+                  for bad in DEMO_FORBIDDEN:
+                      if bad in blob:
+                          problems.append(f"{f}: role-view demo contains stale marker {bad!r}")
+
+          if problems:
+              print("DECK GUARD FAILED — do not publish:")
+              for p in problems:
+                  print("  -", p)
+              sys.exit(1)
+          print(f"Deck guard passed: {len(deck_files)} deck(s) current and correct.")
+          for f in deck_files:
+              print("  ✓", f)
+          PY
+
