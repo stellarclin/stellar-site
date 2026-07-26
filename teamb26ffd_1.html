@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SENTINEL — Team Orientation</title>
+<style>
+:root{
+  --bg:#141b26;--panel:#1e2430;--panel2:#262f3c;--line:#353f4f;
+  --ink:#e6edf3;--dim:#9aa7b4;--faint:#6b7683;
+  --acc:#4aa3ff;--pur:#a371f7;--gold:#e3b341;--green:#3fb950;--red:#f85149;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:#0c1119;color:var(--ink);font-family:var(--sans);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.stage{width:1280px;height:720px;position:relative;flex:none;container-type:size;transform-origin:center center}
+.deck{width:100%;height:100%;position:relative}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;
+  padding:5.5cqh 7cqw;background:var(--bg)}
+.slide.on{display:flex}
+.eyebrow{font-size:1.15cqw;font-weight:700;letter-spacing:.16em;color:var(--acc);text-transform:uppercase;margin-bottom:1.4cqh}
+h1{font-size:5.4cqw;font-weight:800;line-height:1.02;letter-spacing:.5px}
+h2{font-size:3.2cqw;font-weight:800;line-height:1.06;margin-bottom:1cqh}
+.tm{color:var(--green);font-weight:800}
+.lede{font-size:1.7cqw;color:var(--dim);line-height:1.45;max-width:66cqw}
+.big{font-size:2.5cqw;line-height:1.3;font-weight:600}
+.gold{color:var(--gold)}.grn{color:var(--green)}.acc{color:var(--acc)}.red{color:var(--red)}.pur{color:var(--pur)}
+.foot{position:absolute;left:7cqw;bottom:3.2cqh;font-size:.95cqw;color:var(--faint);letter-spacing:.03em}
+.pg{position:absolute;right:7cqw;bottom:3.2cqh;font-size:.95cqw;color:var(--faint)}
+.band{position:absolute;left:0;right:0;top:0;padding:.9cqh 7cqw;background:linear-gradient(90deg,#16233b,#1f1830);
+  border-bottom:1px solid var(--line);font-size:.95cqw;font-weight:700;color:var(--gold);letter-spacing:.03em}
+.band span{color:var(--dim);font-weight:500;margin-left:1.4cqw}
+/* cards */
+.row{display:flex;gap:1.6cqw;margin-top:2.4cqh}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:2.1cqh 1.7cqw;flex:1}
+.card.g{border-color:var(--green)} .card.a{border-color:var(--acc)} .card.gd{border-color:var(--gold)} .card.p{border-color:var(--pur)}
+.card h3{font-size:1.5cqw;margin-bottom:.9cqh}
+.card p{font-size:1.15cqw;color:var(--dim);line-height:1.4}
+.tag{display:inline-block;font-size:.85cqw;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:.4cqh .8cqw;border-radius:20px;margin-bottom:1cqh}
+.t-cna{background:rgba(74,163,255,.14);color:var(--acc);border:1px solid var(--acc)}
+.t-nur{background:rgba(63,185,80,.14);color:var(--green);border:1px solid var(--green)}
+.t-mds{background:rgba(163,113,247,.14);color:var(--pur);border:1px solid var(--pur)}
+/* state chips */
+.states{display:flex;gap:1.4cqw;margin-top:2.6cqh;flex-wrap:wrap}
+.st{flex:1;min-width:18cqw;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:2cqh 1.6cqw}
+.chip{display:inline-block;font-size:1cqw;font-weight:800;padding:.4cqh 1cqw;border-radius:20px;margin-bottom:1.1cqh}
+.c-flag{background:rgba(227,179,65,.15);color:var(--gold);border:1px solid var(--gold)}
+.c-pass{background:rgba(63,185,80,.15);color:var(--green);border:1px solid var(--green)}
+.c-pend{background:rgba(163,113,247,.15);color:var(--pur);border:1px solid var(--pur)}
+.c-exp{background:rgba(248,81,73,.15);color:var(--red);border:1px solid var(--red)}
+.st p{font-size:1.12cqw;color:var(--dim);line-height:1.38}
+/* flow */
+.flow{display:flex;align-items:stretch;gap:0;margin-top:3cqh}
+.step{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:2.2cqh 1.5cqw;text-align:center}
+.step .n{font-size:1cqw;font-weight:800;color:var(--acc);letter-spacing:.1em}
+.step h4{font-size:1.45cqw;margin:.8cqh 0}
+.step p{font-size:1.05cqw;color:var(--dim);line-height:1.35}
+.arr{display:flex;align-items:center;justify-content:center;width:3cqw;color:var(--green);font-size:2cqw;font-weight:800}
+/* not list */
+.nots{margin-top:2.6cqh;display:grid;grid-template-columns:1fr 1fr;gap:1.5cqh 2.6cqw}
+.nots div{font-size:1.35cqw;line-height:1.4}
+.nots b{color:var(--ink)}
+.x{color:var(--red);font-weight:800;margin-right:.5cqw}
+.chk{color:var(--green);font-weight:800;margin-right:.5cqw}
+/* faq */
+.faq{margin-top:2.4cqh}
+.qa{border-top:1px solid var(--line);padding:1.5cqh 0}
+.qa .q{font-size:1.45cqw;font-weight:700;color:var(--ink)}
+.qa .a{font-size:1.25cqw;color:var(--dim);margin-top:.5cqh;line-height:1.4}
+.pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+  padding:1.4cqh 1.4cqw;font-size:1.25cqw;margin-top:2.6cqh;color:var(--ink)}
+.demobtn{display:inline-flex;align-self:flex-start;align-items:center;gap:.6cqw;margin-top:2.6cqh;background:var(--green);color:#06230f;
+  text-decoration:none;font-weight:800;font-size:1.35cqw;padding:1.3cqh 1.9cqw;border-radius:12px;transition:filter .12s}
+.demobtn:hover{filter:brightness(1.07)}
+.demobtn small{font-weight:500;color:#0a3016;font-size:.95cqw}
+.nav{position:absolute;right:7cqw;bottom:3cqh;display:flex;gap:.6cqw;z-index:5}
+.nav button{background:var(--panel);border:1px solid var(--line);color:var(--dim);border-radius:8px;
+  width:2.6cqw;height:2.6cqw;font-size:1.2cqw;cursor:pointer}
+.nav button:hover{border-color:var(--acc);color:var(--ink)}
+
+.slide{cursor:pointer}
+.pg{display:none}
+.demobtn{border:none;font-family:inherit;cursor:pointer}
+.pgnum{position:absolute;right:7cqw;bottom:3cqh;font-size:1cqw;color:var(--faint);font-weight:600;z-index:6}
+.backchev{position:absolute;left:1.4cqw;top:50%;transform:translateY(-50%);font-size:3.4cqw;color:var(--faint);cursor:pointer;z-index:6;line-height:1;user-select:none}
+.backchev:hover{color:var(--ink)}
+.demo-overlay{position:fixed;inset:0;background:rgba(6,10,16,.94);z-index:50;display:none;padding:3.5vh 3.5vw}
+.demo-overlay.on{display:block}
+.demo-close{position:absolute;top:2.2vh;right:2.5vw;z-index:2;background:#1e2430;color:#e6edf3;border:1px solid #353f4f;border-radius:8px;padding:9px 15px;font-size:14px;cursor:pointer;font-family:inherit;font-weight:600}
+.demo-close:hover{border-color:#4aa3ff}
+.demo-frame{width:100%;height:100%;border:1px solid #353f4f;border-radius:12px;background:#141b26}
+
+  /* ===== Mobile / touch controls (MOBILE-NAV-v1) — outside the scaled stage, real px ===== */
+  #mnav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;align-items:center;justify-content:space-between;
+    gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,rgba(20,27,38,0),rgba(20,27,38,.92) 42%)}
+  #mnav button{-webkit-appearance:none;appearance:none;border:1px solid #353f4f;background:rgba(30,36,48,.96);
+    color:#e6edf3;font-size:26px;line-height:1;width:64px;height:52px;border-radius:14px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+  #mnav button:active{background:#4aa3ff;color:#04240f}
+  #mnav .mcount{color:#e6edf3;font-size:15px;font-weight:700;background:rgba(30,36,48,.96);border:1px solid #353f4f;
+    border-radius:999px;padding:9px 16px;min-width:78px;text-align:center}
+  #rotate{position:fixed;inset:0;z-index:80;display:none;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;background:rgba(10,14,20,.95);color:#e6edf3;text-align:center;padding:32px}
+  #rotate .icn{font-size:52px;animation:mrot 2.4s ease-in-out infinite}
+  #rotate .t{font-size:19px;font-weight:800}
+  #rotate .s{font-size:15px;color:#9aa7b4;max-width:22em;line-height:1.5}
+  #rotate button{margin-top:6px;border:1px solid #353f4f;background:rgba(30,36,48,.96);color:#e6edf3;
+    font-size:15px;font-weight:700;padding:12px 22px;border-radius:12px;cursor:pointer}
+  @keyframes mrot{0%,100%{transform:rotate(-12deg)}50%{transform:rotate(78deg)}}
+  @media (max-width:820px),(pointer:coarse){#mnav{display:flex} .hint{display:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+<div class="deck" id="deck">
+
+<!-- 1 TITLE -->
+<section class="slide on">
+  <div class="eyebrow">SENTINEL · Team orientation</div>
+  <h1>How <span class="acc">SENTINEL</span><span class="tm">™</span> works<br>for your team.</h1>
+  <p class="lede" style="margin-top:2.4cqh">A short walk-through of what you'll see, what each state means, and how a flag becomes a pass — by role. Nothing to install, no separate login, no button to push.</p>
+  <div class="foot">Stellar Inc. · SENTINEL · Confidential · Synthetic examples, no PHI</div>
+</section>
+
+<!-- 2 ONE IDEA -->
+<section class="slide">
+  <div class="eyebrow">The one idea</div>
+  <h2>SENTINEL only <span class="grn">reads</span> the record.</h2>
+  <p class="big" style="margin-top:1.4cqh">You document in PointClickCare the way you always do.<br>SENTINEL reads what's there and shows what the record still needs — <span class="gold">while there's still time to add it.</span></p>
+  <p class="lede" style="margin-top:2.6cqh">It never signs anything off. There is <b class="grn">no "Complete" button</b> in SENTINEL — because a tap can't prove a record is right, and it isn't SENTINEL's job to say so. A flag clears only when the documentation is in PCC and SENTINEL reads it.</p>
+  <div class="pg">2</div>
+</section>
+
+<!-- 3 ROLE VIEWS -->
+<section class="slide">
+  <div class="eyebrow">What you'll see · by role</div>
+  <h2>Each role sees only what fits their job.</h2>
+  <div class="row">
+    <div class="card a"><span class="tag t-cna">CNA · unit view</span><h3>Your unit, this shift</h3><p>What the <b>record</b> needs on the unit — never a per-person list, never a per-person finding. Right at the top of the <b>Point of Care (POC) assignment screen</b> you already work from.</p></div>
+    <div class="card g"><span class="tag t-nur">Licensed Nurse</span><h3>Items that need a nurse</h3><p>Unit items that need a licensed nurse to assess and document, plus anything waiting on your review. Each item names, in plain language, the exact elements the record is missing.</p></div>
+    <div class="card p"><span class="tag t-mds">MDS Coordinator</span><h3>Classification items</h3><p>Substantiation gaps that drive the HIPPS/PDPM classification — routed to MDS, not onto the floor nurse.</p></div>
+  </div>
+  <p class="lede" style="margin-top:2.2cqh">Managers and the DON see the same information rolled up as counts and trends — not individual staff.</p>
+  <button class="demobtn" onclick="openDemo()">▶ Open the interactive demo&nbsp;&nbsp;<small>tap a role · tap any resident</small></button>
+  <div class="pg">3</div>
+</section>
+
+<!-- 4 STATES -->
+<section class="slide">
+  <div class="eyebrow">The four states</div>
+  <h2>Every item is in one of four states.</h2>
+  <div class="states">
+    <div class="st"><span class="chip c-flag">Flag</span><p>A correctable gap, <b>still inside the window</b>. There's time to document it.</p></div>
+    <div class="st"><span class="chip c-pass">Pass</span><p>The record <b>supports the classification</b>. Nothing needed.</p></div>
+    <div class="st"><span class="chip c-pend">Pending</span><p>Needs a <b>clinician's judgment</b> before anything is decided.</p></div>
+    <div class="st"><span class="chip c-exp">Exposure</span><p>The window <b>closed</b> — a late entry no longer counts as a timely correction.</p></div>
+  </div>
+  <p class="lede" style="margin-top:2.6cqh">A <span class="gold">Flag</span> is an opportunity, not a mark against anyone. The whole point is to catch it while it's still a Flag.</p>
+  <div class="pg">4</div>
+</section>
+
+<!-- 5 HOW A FLAG CLEARS -->
+<section class="slide">
+  <div class="eyebrow">How a flag becomes a pass</div>
+  <h2>You document — SENTINEL checks — it clears itself.</h2>
+  <div class="flow">
+    <div class="step"><div class="n">STEP 1</div><h4>You document in PCC</h4><p>Add the observation or note the record needs — in PointClickCare, as usual.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="n">STEP 2</div><h4>SENTINEL re-checks</h4><p>About every 10 minutes. PCC doesn't push updates, so SENTINEL keeps checking on its own.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><div class="n">STEP 3</div><h4><span class="grn">Flag → Pass</span></h4><p>On the next check, the flag clears by itself. No refresh needed, no button to press.</p></div>
+  </div>
+  <p class="lede" style="margin-top:2.8cqh"><b class="acc">Do I need to refresh?</b> No — it updates on its own about every 10 minutes. Document it, give it a few minutes, and the flag clears — nothing to press.</p>
+  <div class="pg">5</div>
+</section>
+
+<!-- 6 TWO MOMENTS -->
+<section class="slide">
+  <div class="eyebrow">Two checkpoints in your shift</div>
+  <h2>Two quiet checkpoints — right where you already work.</h2>
+  <div class="row">
+    <div class="card a"><h3><span class="acc">1 · Mid-shift</span></h3><p style="font-size:1.3cqw">A passive count sits at the top of your Point of Care (POC) assignment screen in PCC — the resident list you already work from all shift. It updates as you document. No pop-ups, nobody singled out.</p></div>
+    <div class="card g"><h3><span class="grn">2 · Before handoff</span></h3><p style="font-size:1.3cqw">About an hour before your shift ends — while you're still on the floor and there's time to act. It sits before report, on purpose — never at clock-out.</p></div>
+  </div>
+  <p class="lede" style="margin-top:2.8cqh">No separate app, no extra login, no signing in or out to see it — it lives at the top of the Point of Care (POC) assignment screen you already work from.</p>
+  <div class="pg">6</div>
+</section>
+
+<!-- 7 WHAT IT IS NOT -->
+<section class="slide">
+  <div class="eyebrow">Just as important — what it is <span style="color:var(--red)">not</span></div>
+  <h2>What SENTINEL will never do.</h2>
+  <div class="nots">
+    <div><span class="x">✕</span><b>Not a performance evaluation.</b> It looks at the record, not at you.</div>
+    <div><span class="x">✕</span><b>Not for personnel action.</b> Ever. Full stop.</div>
+    <div><span class="x">✕</span><b>No separate app or login.</b> It lives where you already work.</div>
+    <div><span class="x">✕</span><b>No "Complete" to tap.</b> You document; it verifies.</div>
+    <div><span class="chk">✓</span><b>It is</b> a second set of eyes on the record.</div>
+    <div><span class="chk">✓</span><b>It is</b> a chance to fix a gap while the window is open.</div>
+  </div>
+  <p class="lede" style="margin-top:2.8cqh">SENTINEL is on the same side as you: keeping the record as good as the care you already gave.</p>
+  <div class="pg">7</div>
+</section>
+
+<!-- 8 THE FAIRNESS DETAILS (#6) -->
+<section class="slide">
+  <div class="eyebrow">The details that keep it fair</div>
+  <h2>Built so it earns your trust.</h2>
+  <div class="row">
+    <div class="card gd"><h3 class="gold">Flag wrong? Dispute it — on the record.</h3><p>A licensed nurse or MDS coordinator (not a CNA) can mark a flag &ldquo;not correct&rdquo; and record why. It&rsquo;s a logged, accountable clinical judgment — kept visible to leadership, not erased — and it never certifies the record as complete.</p></div>
+    <div class="card a"><h3 class="acc">Most-urgent first</h3><p>When several items are open, the one with the <b>soonest-closing window</b> and most at stake shows first — you're never hunting.</p></div>
+    <div class="card g"><h3 class="grn">The count is honest</h3><p>SENTINEL re-checks the record about every 10 minutes, but it counts each open flag <b>only once</b> — the totals never inflate just because it keeps looking. What leadership sees is the real picture, not a number stacked against anyone.</p></div>
+  </div>
+  <p class="lede" style="margin-top:2.6cqh"><b class="grn">"What changed"</b> — every summary shows flags resolved in time, new flags, and anything that slipped past the window. That's the story, not just a list.</p>
+  <div class="pg">8</div>
+</section>
+
+<!-- 9 FAQ -->
+<section class="slide">
+  <div class="eyebrow">Quick answers</div>
+  <h2>The questions people ask first.</h2>
+  <div class="faq">
+    <div class="qa"><div class="q">Do I have to log in or install anything?</div><div class="a">No. It shows up at the top of the Point of Care (POC) assignment screen you already work from in PCC — no separate app, no extra login.</div></div>
+    <div class="qa"><div class="q">Do I push a button to clear a flag?</div><div class="a">No. You document in PCC. SENTINEL reads it and clears the flag on its next check.</div></div>
+    <div class="qa"><div class="q">Can this be used against me?</div><div class="a">No. It's aggregate, never a per-person finding, and never used for personnel action.</div></div>
+    <div class="qa"><div class="q">Is SENTINEL watching for patient-safety problems?</div><div class="a">No — that isn't its job. SENTINEL looks at the documentation, not a resident's live clinical status, so it is not a safety alarm. Patient-safety concerns are handled the way they always are — through your clinical protocols and chain of command — never through SENTINEL.</div></div>
+  </div>
+  <div class="pg">9</div>
+</section>
+
+<!-- 10 CLOSE -->
+<section class="slide">
+  <div class="eyebrow">In one line</div>
+  <h1 style="font-size:4.4cqw;line-height:1.1">Give the care.<br>Document it.<br><span class="gold">Keep the credit you earned.</span></h1>
+  <p class="lede" style="margin-top:3cqh"><span class="grn">SENTINEL</span><span class="tm">™</span> helps you keep it — one more set of eyes making sure the record shows everything you already did, so the credit for your work stays yours.</p>
+  <div class="foot">Stellar Inc. · SENTINEL · Observe-only · Never for personnel action · Synthetic examples, no PHI</div>
+  <div class="pg">10</div>
+</section>
+
+</div>
+<div class="backchev" onclick="go(-1)" title="Back">‹</div>
+<div class="pgnum" id="pgnum"></div>
+</div>
+<div class="demo-overlay" id="demoOverlay">
+  <button class="demo-close" onclick="closeDemo()">✕ Close</button>
+  <iframe class="demo-frame" id="demoFrame" title="SENTINEL interactive demo"></iframe>
+</div>
+<script>
+var stage=document.getElementById('stage');
+function fit(){var s=Math.min(window.innerWidth/1280,window.innerHeight/720);stage.style.transform='scale('+s+')';}
+window.addEventListener('resize',fit);fit();
+var i=0,S=document.querySelectorAll('.slide'),pgnum=document.getElementById('pgnum');
+function show(n){S[i].classList.remove('on');i=(n+S.length)%S.length;S[i].classList.add('on');pgnum.textContent=(i+1)+' / '+S.length;}
+function go(d){show(i+d);}
+show(0);
+document.getElementById('deck').addEventListener('click',function(e){
+  if(e.target.closest('a,button,.backchev,.demobtn'))return;
+  if(e.clientX < window.innerWidth*0.12) go(-1); else go(1);
+});
+function overlayOpen(){return document.getElementById('demoOverlay').classList.contains('on');}
+function openDemo(){var f=document.getElementById('demoFrame');f.srcdoc=decodeURIComponent(escape(atob(DEMO_B64)));document.getElementById('demoOverlay').classList.add('on');}
+function closeDemo(){document.getElementById('demoOverlay').classList.remove('on');document.getElementById('demoFrame').removeAttribute('srcdoc');}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){closeDemo();return;}
+  if(overlayOpen())return;
+  if(e.key==='ArrowRight'||e.key===' ')go(1);
+  else if(e.key==='ArrowLeft')go(-1);
+  else if(e.key==='f'){var d=document.getElementById('deck');if(!document.fullscreenElement)d.requestFullscreen();else document.exitFullscreen();}
+});
+var DEMO_B64="PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CjxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KPG1ldGEgbmFtZT0idmlld3BvcnQiIGNvbnRlbnQ9IndpZHRoPWRldmljZS13aWR0aCwgaW5pdGlhbC1zY2FsZT0xLjAiPgo8dGl0bGU+U0VOVElORUwg4oCUIFRlYW0gRGVtbzwvdGl0bGU+CjxzdHlsZT4KICA6cm9vdHsKICAgIC0tYmc6IzE0MWIyNjstLXBhbmVsOiMxZTI0MzA7LS1wYW5lbDI6IzI2MmYzYzstLWxpbmU6IzM1M2Y0ZjsKICAgIC0taW5rOiNlNmVkZjM7LS1kaW06IzlhYTdiNDstLWZhaW50OiM2Yjc2ODM7CiAgICAtLWFjYzojNGFhM2ZmOy0tcHVyOiNhMzcxZjc7LS1nb2xkOiNlM2IzNDE7LS1ncmVlbjojM2ZiOTUwOy0tcmVkOiNmODUxNDk7CiAgICAtLXNhbnM6LWFwcGxlLXN5c3RlbSxCbGlua01hY1N5c3RlbUZvbnQsIlNlZ29lIFVJIixSb2JvdG8sSGVsdmV0aWNhLEFyaWFsLHNhbnMtc2VyaWY7CiAgICAtLW1vbm86dWktbW9ub3NwYWNlLE1lbmxvLENvbnNvbGFzLG1vbm9zcGFjZTsKICB9CiAgKntib3gtc2l6aW5nOmJvcmRlci1ib3g7bWFyZ2luOjA7cGFkZGluZzowfQogIGJvZHl7YmFja2dyb3VuZDp2YXIoLS1iZyk7Y29sb3I6dmFyKC0taW5rKTtmb250LWZhbWlseTp2YXIoLS1zYW5zKTtsaW5lLWhlaWdodDoxLjU7cGFkZGluZzowIDAgNTBweH0KICAuc3RyaXB7cGFkZGluZzo3cHggMjRweDtmb250LXNpemU6MTEuNXB4O2NvbG9yOnZhcigtLWZhaW50KTtsZXR0ZXItc3BhY2luZzouMDRlbTtib3JkZXItYm90dG9tOjFweCBzb2xpZCB2YXIoLS1saW5lKTt0ZXh0LWFsaWduOmNlbnRlcn0KICAuc3RyaXAgYntjb2xvcjp2YXIoLS1nb2xkKX0KICAud3JhcHttYXgtd2lkdGg6OTYwcHg7bWFyZ2luOjAgYXV0bztwYWRkaW5nOjAgMjRweH0KICBoZWFkZXIuaHtwYWRkaW5nOjMwcHggMCA2cHh9CiAgLmJyYW5ke2ZvbnQtc2l6ZToyNHB4O2ZvbnQtd2VpZ2h0OjgwMDtjb2xvcjp2YXIoLS1hY2MpO2xldHRlci1zcGFjaW5nOi41cHh9CiAgLnN1Yntjb2xvcjp2YXIoLS1kaW0pO2ZvbnQtc2l6ZToxNXB4O21hcmdpbi10b3A6NXB4fQogIC5oaW50e21hcmdpbi10b3A6MTJweDtmb250LXNpemU6MTIuNXB4O2NvbG9yOnZhcigtLWFjYyk7Zm9udC13ZWlnaHQ6NjAwfQogIC5oaW50IHNwYW57Y29sb3I6dmFyKC0tZmFpbnQpO2ZvbnQtd2VpZ2h0OjQwMH0KICAudGFic3tkaXNwbGF5OmZsZXg7Z2FwOjhweDttYXJnaW46MTZweCAwIDRweH0KICAudGFie2ZsZXg6MTtiYWNrZ3JvdW5kOnZhcigtLXBhbmVsKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO2NvbG9yOnZhcigtLWRpbSk7Ym9yZGVyLXJhZGl1czoxMnB4O3BhZGRpbmc6MTNweCAxNnB4O2ZvbnQtc2l6ZToxNXB4O2ZvbnQtd2VpZ2h0OjcwMDtjdXJzb3I6cG9pbnRlcjt0ZXh0LWFsaWduOmNlbnRlcjt0cmFuc2l0aW9uOmFsbCAuMTJzfQogIC50YWI6aG92ZXJ7Ym9yZGVyLWNvbG9yOnZhcigtLWFjYyk7Y29sb3I6dmFyKC0taW5rKX0KICAudGFiLm9ue2JvcmRlci1jb2xvcjp2YXIoLS1hY2MpO2NvbG9yOnZhcigtLWluayk7YmFja2dyb3VuZDp2YXIoLS1wYW5lbDIpfQogIC50YWIgc21hbGx7ZGlzcGxheTpibG9jaztmb250LXdlaWdodDo1MDA7Y29sb3I6dmFyKC0tZmFpbnQpO2ZvbnQtc2l6ZToxMS41cHg7bWFyZ2luLXRvcDozcHh9CiAgLnZpZXd7ZGlzcGxheTpub25lO21hcmdpbi10b3A6MjBweH0udmlldy5vbntkaXNwbGF5OmJsb2NrfQogIC52aGVhZHtkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47YWxpZ24taXRlbXM6YmFzZWxpbmU7Z2FwOjE2cHg7bWFyZ2luLWJvdHRvbTo2cHh9CiAgLnZoZWFkIGgye2ZvbnQtc2l6ZToxOHB4fQogIC52aGVhZCAuY291bnR7Zm9udC1zaXplOjE0cHg7Y29sb3I6dmFyKC0tZ29sZCk7Zm9udC13ZWlnaHQ6NzAwfQogIC5pbnRyb3tmb250LXNpemU6MTMuNXB4O2NvbG9yOnZhcigtLWRpbSk7bWFyZ2luLWJvdHRvbToxNnB4fQogIC5pdGVte2JhY2tncm91bmQ6dmFyKC0tcGFuZWwpO2JvcmRlcjoxcHggc29saWQgdmFyKC0tbGluZSk7Ym9yZGVyLXJhZGl1czoxMnB4O3BhZGRpbmc6MTVweCAxN3B4O21hcmdpbi1ib3R0b206MTFweDtjdXJzb3I6cG9pbnRlcjt0cmFuc2l0aW9uOmJvcmRlci1jb2xvciAuMTJzLGJhY2tncm91bmQgLjEyc30KICAuaXRlbTpob3Zlcntib3JkZXItY29sb3I6dmFyKC0tYWNjKTtiYWNrZ3JvdW5kOiMyMTI4MzZ9CiAgLml0ZW0uZmxhZ3tib3JkZXItbGVmdDozcHggc29saWQgdmFyKC0tZ29sZCl9IC5pdGVtLmV4cHtib3JkZXItbGVmdDozcHggc29saWQgdmFyKC0tcmVkKX0gLml0ZW0ucGVuZHtib3JkZXItbGVmdDozcHggc29saWQgdmFyKC0tcHVyKX0gLml0ZW0ucGFzc3tib3JkZXItbGVmdDozcHggc29saWQgdmFyKC0tZ3JlZW4pfQogIC5pdGVtIC50b3B7ZGlzcGxheTpmbGV4O2p1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuO2dhcDoxNnB4O2FsaWduLWl0ZW1zOmNlbnRlcn0KICAuaXRlbSAucmlke2ZvbnQtZmFtaWx5OnZhcigtLW1vbm8pO2ZvbnQtc2l6ZToxMS41cHg7Y29sb3I6dmFyKC0tZmFpbnQpfQogIC5pdGVtIGgze2ZvbnQtc2l6ZToxNS41cHg7bWFyZ2luOjNweCAwIDVweH0KICAuaXRlbSAubmVlZHtmb250LXNpemU6MTMuNXB4O2NvbG9yOnZhcigtLWluayl9CiAgLml0ZW0gLm5lZWQgYntjb2xvcjp2YXIoLS1nb2xkKX0KICAuaXRlbSAud2lue2ZvbnQtc2l6ZToxMnB4O2NvbG9yOnZhcigtLWdvbGQpO2ZvbnQtd2VpZ2h0OjcwMDttYXJnaW4tdG9wOjZweH0KICAuaXRlbSAud2luLnNvb257Y29sb3I6dmFyKC0tcmVkKX0KICAucmlnaHR7ZGlzcGxheTpmbGV4O2ZsZXgtZGlyZWN0aW9uOmNvbHVtbjthbGlnbi1pdGVtczpmbGV4LWVuZDtnYXA6N3B4O2ZsZXgtc2hyaW5rOjB9CiAgLmNoaXB7Zm9udC1zaXplOjExLjVweDtmb250LXdlaWdodDo3MDA7cGFkZGluZzo1cHggMTNweDtib3JkZXItcmFkaXVzOjIwcHg7d2hpdGUtc3BhY2U6bm93cmFwfQogIC5jLWZsYWd7YmFja2dyb3VuZDpyZ2JhKDIyNywxNzksNjUsLjE1KTtjb2xvcjp2YXIoLS1nb2xkKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWdvbGQpfQogIC5jLXBhc3N7YmFja2dyb3VuZDpyZ2JhKDYzLDE4NSw4MCwuMTUpO2NvbG9yOnZhcigtLWdyZWVuKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWdyZWVuKX0KICAuYy1leHB7YmFja2dyb3VuZDpyZ2JhKDI0OCw4MSw3MywuMTUpO2NvbG9yOnZhcigtLXJlZCk7Ym9yZGVyOjFweCBzb2xpZCB2YXIoLS1yZWQpfQogIC5jLXBlbmR7YmFja2dyb3VuZDpyZ2JhKDE2MywxMTMsMjQ3LC4xNSk7Y29sb3I6dmFyKC0tcHVyKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLXB1cil9CiAgLmV4cC1jdWV7Zm9udC1zaXplOjExcHg7Y29sb3I6dmFyKC0tZmFpbnQpO2ZvbnQtd2VpZ2h0OjYwMH0KICAuZGV0YWlse2Rpc3BsYXk6bm9uZTttYXJnaW4tdG9wOjEycHg7cGFkZGluZy10b3A6MTJweDtib3JkZXItdG9wOjFweCBkYXNoZWQgdmFyKC0tbGluZSk7Zm9udC1zaXplOjEyLjVweDtjb2xvcjp2YXIoLS1kaW0pO2xpbmUtaGVpZ2h0OjEuNTV9CiAgLml0ZW0ub3BlbiAuZGV0YWlse2Rpc3BsYXk6YmxvY2t9CiAgLml0ZW0ub3BlbiAuY2FyZXR7dHJhbnNmb3JtOnJvdGF0ZSg5MGRlZyl9CiAgLmNhcmV0e2Rpc3BsYXk6aW5saW5lLWJsb2NrO2NvbG9yOnZhcigtLWZhaW50KTt0cmFuc2l0aW9uOnRyYW5zZm9ybSAuMTJzO2ZvbnQtc2l6ZToxMnB4fQogIC5kZXRhaWwgLmt7Y29sb3I6dmFyKC0tZmFpbnQpO3RleHQtdHJhbnNmb3JtOnVwcGVyY2FzZTtsZXR0ZXItc3BhY2luZzouMDRlbTtmb250LXNpemU6MTAuNXB4O2ZvbnQtd2VpZ2h0OjcwMDttYXJnaW4tYm90dG9tOjJweH0KICAuZGV0YWlsIC5jbGVhcntjb2xvcjp2YXIoLS1ncmVlbik7Zm9udC13ZWlnaHQ6NjAwO21hcmdpbi10b3A6OHB4fQogIC5kZW1ve2JhY2tncm91bmQ6dmFyKC0tcGFuZWwyKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO2JvcmRlci1yYWRpdXM6MTJweDtwYWRkaW5nOjE2cHggMThweDttYXJnaW4tdG9wOjIycHh9CiAgLmRlbW8gLmxhYntmb250LXNpemU6MTJweDtjb2xvcjp2YXIoLS1hY2MpO2ZvbnQtd2VpZ2h0OjcwMDtsZXR0ZXItc3BhY2luZzouMDVlbTt0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7bWFyZ2luLWJvdHRvbToxMHB4fQogIC5idG57YmFja2dyb3VuZDp2YXIoLS1ncmVlbik7Y29sb3I6IzA2MjMwZjtib3JkZXI6bm9uZTtib3JkZXItcmFkaXVzOjlweDtwYWRkaW5nOjExcHggMThweDtmb250LXNpemU6MTRweDtmb250LXdlaWdodDo3MDA7Y3Vyc29yOnBvaW50ZXJ9CiAgLmJ0bjpob3ZlcntmaWx0ZXI6YnJpZ2h0bmVzcygxLjA2KX0KICAuYnRuLnJlc2V0e2JhY2tncm91bmQ6dHJhbnNwYXJlbnQ7Y29sb3I6dmFyKC0tZGltKTtib3JkZXI6MXB4IHNvbGlkIHZhcigtLWxpbmUpO21hcmdpbi1sZWZ0OjhweH0KICAucmVzdWx0e2Rpc3BsYXk6bm9uZTttYXJnaW4tdG9wOjEzcHg7Zm9udC1zaXplOjEzLjVweDtjb2xvcjp2YXIoLS1ncmVlbik7Zm9udC13ZWlnaHQ6NjAwfQogIC5yZXN1bHQub257ZGlzcGxheTpibG9ja30KICAuZmluZXtmb250LXNpemU6MTJweDtjb2xvcjp2YXIoLS1mYWludCk7bWFyZ2luLXRvcDoxMnB4O2xpbmUtaGVpZ2h0OjEuNX0KICBmb290ZXJ7bWFyZ2luLXRvcDoyNHB4O2ZvbnQtc2l6ZToxMXB4O2NvbG9yOnZhcigtLWZhaW50KTt0ZXh0LWFsaWduOmNlbnRlcn0KICAua21hcHttYXJnaW4tdG9wOjhweH0KICAua2xhYntmb250LXNpemU6MTFweDtjb2xvcjp2YXIoLS1mYWludCk7bWFyZ2luLWJvdHRvbTo1cHh9CiAgLmt0YWd7ZGlzcGxheTppbmxpbmUtYmxvY2s7YmFja2dyb3VuZDojMjAyYTM4O2JvcmRlcjoxcHggc29saWQgdmFyKC0tbGluZSk7Ym9yZGVyLXJhZGl1czo2cHg7cGFkZGluZzozcHggOHB4O21hcmdpbjowIDVweCA1cHggMDtmb250LXNpemU6MTEuNXB4O2NvbG9yOnZhcigtLWluayl9CiAgLmt0YWcuc2FmZXR5e2JvcmRlci1jb2xvcjp2YXIoLS1wdXIpO2NvbG9yOnZhcigtLXB1cil9CiAgLmtmcmFtZXtmb250LXNpemU6MTFweDtjb2xvcjp2YXIoLS1mYWludCk7Zm9udC1zdHlsZTppdGFsaWM7bWFyZ2luLXRvcDozcHg7bGluZS1oZWlnaHQ6MS41fQo8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJzdHJpcCI+PGI+4peGIERFTU88L2I+IMK3IHN5bnRoZXRpYyBkYXRhLCBubyBQSEkgwrcgb2JzZXJ2ZS1vbmx5IMK3IG5vdCBmb3IgcGVyc29ubmVsIGFjdGlvbjwvZGl2Pgo8ZGl2IGNsYXNzPSJ3cmFwIj4KICA8aGVhZGVyIGNsYXNzPSJoIj4KICAgIDxkaXYgY2xhc3M9ImJyYW5kIj5TRU5USU5FTDwvZGl2PgogICAgPGRpdiBjbGFzcz0ic3ViIj5XaGF0IGVhY2ggcm9sZSBzZWVzIOKAlCBhbmQgaG93IGEgZmxhZyBjbGVhcnMgaXRzZWxmLiBUaGVyZSdzIG5vIGJ1dHRvbiB0byBwcmVzczogeW91IGRvY3VtZW50IGluIFBvaW50Q2xpY2tDYXJlLCBhbmQgU0VOVElORUwgdmVyaWZpZXMuPC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJoaW50Ij7ilrggVGFwIGEgcm9sZSBiZWxvdyZuYnNwOyZuYnNwO8K3Jm5ic3A7Jm5ic3A7PHNwYW4+dGFwIGFueSByZXNpZGVudCB0byBzZWUgd2hhdCB0aGUgcmVjb3JkIG5lZWRzPC9zcGFuPjwvZGl2PgogIDwvaGVhZGVyPgoKICA8ZGl2IGNsYXNzPSJ0YWJzIj4KICAgIDxkaXYgY2xhc3M9InRhYiBvbiIgZGF0YS10PSJjbmEiIG9uY2xpY2s9InRhYignY25hJykiPkNOQTxzbWFsbD55b3VyIHVuaXQ8L3NtYWxsPjwvZGl2PgogICAgPGRpdiBjbGFzcz0idGFiIiBkYXRhLXQ9Im51cnNlIiBvbmNsaWNrPSJ0YWIoJ251cnNlJykiPkxpY2Vuc2VkIE51cnNlPHNtYWxsPml0ZW1zIHRoYXQgbmVlZCBhIG51cnNlPC9zbWFsbD48L2Rpdj4KICAgIDxkaXYgY2xhc3M9InRhYiIgZGF0YS10PSJtZHMiIG9uY2xpY2s9InRhYignbWRzJykiPk1EUyBDb29yZGluYXRvcjxzbWFsbD5jbGFzc2lmaWNhdGlvbiBpdGVtczwvc21hbGw+PC9kaXY+CiAgPC9kaXY+CgogIDxkaXYgY2xhc3M9InZpZXcgb24iIGlkPSJ2LWNuYSI+CiAgICA8ZGl2IGNsYXNzPSJ2aGVhZCI+PGgyPlJlaGFiIDJOIOKAlCB5b3VyIHVuaXQgdGhpcyBzaGlmdDwvaDI+PGRpdiBjbGFzcz0iY291bnQiIGlkPSJjbmEtY291bnQiPjwvZGl2PjwvZGl2PgogICAgPGRpdiBjbGFzcz0iaW50cm8iPldoYXQgdGhlIHJlY29yZCBuZWVkcyBvbiB0aGUgdW5pdCDigJQgYWdncmVnYXRlLCBuZXZlciBhIHBlci1wZXJzb24gbGlzdCwgbmV2ZXIgYSBzY29yZS48L2Rpdj4KICAgIDxkaXYgaWQ9ImNuYS1saXN0Ij48L2Rpdj4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJ2aWV3IiBpZD0idi1udXJzZSI+CiAgICA8ZGl2IGNsYXNzPSJ2aGVhZCI+PGgyPkxpY2Vuc2VkIE51cnNlIOKAlCBKLiBPa2Fmb3IsIFJOPC9oMj48ZGl2IGNsYXNzPSJjb3VudCIgaWQ9Im51cnNlLWNvdW50Ij48L2Rpdj48L2Rpdj4KICAgIDxkaXYgY2xhc3M9ImludHJvIj5JdGVtcyB0aGF0IG5lZWQgYSBsaWNlbnNlZCBudXJzZSB0byBhc3Nlc3MgYW5kIGRvY3VtZW50IOKAlCBwbHVzIGFueXRoaW5nIHdhaXRpbmcgb24geW91ciByZXZpZXcuPC9kaXY+CiAgICA8ZGl2IGlkPSJudXJzZS1saXN0Ij48L2Rpdj4KICA8L2Rpdj4KICA8ZGl2IGNsYXNzPSJ2aWV3IiBpZD0idi1tZHMiPgogICAgPGRpdiBjbGFzcz0idmhlYWQiPjxoMj5NRFMgQ29vcmRpbmF0b3Ig4oCUIGZhY2lsaXR5PC9oMj48ZGl2IGNsYXNzPSJjb3VudCIgaWQ9Im1kcy1jb3VudCI+PC9kaXY+PC9kaXY+CiAgICA8ZGl2IGNsYXNzPSJpbnRybyI+Q2xhc3NpZmljYXRpb24tZHJpdmluZyBnYXBzIChISVBQUy9QRFBNKSByb3V0ZWQgdG8gTURTLCBub3Qgb250byB0aGUgZmxvb3IgbnVyc2UuPC9kaXY+CiAgICA8ZGl2IGlkPSJtZHMtbGlzdCI+PC9kaXY+CiAgPC9kaXY+CgogIDxkaXYgY2xhc3M9ImRlbW8iPgogICAgPGRpdiBjbGFzcz0ibGFiIj5UcnkgaXQg4oCUIHdhdGNoIGEgZmxhZyBjbGVhcjwvZGl2PgogICAgPGJ1dHRvbiBjbGFzcz0iYnRuIiBvbmNsaWNrPSJzaW1SdW4oKSI+RG9jdW1lbnQgdGhlIHNlbGYtY2FyZSBvYnNlcnZhdGlvbiBpbiBQQ0Mg4oaSPC9idXR0b24+CiAgICA8YnV0dG9uIGNsYXNzPSJidG4gcmVzZXQiIG9uY2xpY2s9InJlc2V0U2ltKCkiPlJlc2V0PC9idXR0b24+CiAgICA8ZGl2IGNsYXNzPSJyZXN1bHQiIGlkPSJyZXN1bHQiPjwvZGl2PgogICAgPGRpdiBjbGFzcz0iZmluZSI+U0VOVElORUwgcmUtY2hlY2tzIHRoZSByZWNvcmQgb24gaXRzIG93biBhYm91dCBldmVyeSAxMCBtaW51dGVzIOKAlCBkb2N1bWVudCBpdCwgZ2l2ZSBpdCBhIGZldyBtaW51dGVzLCBhbmQgdGhlIGZsYWcgY2xlYXJzIGl0c2VsZi4gTm90aGluZyB0byByZWZyZXNoLCBub3RoaW5nIHRvIHByZXNzLjwvZGl2PgogIDwvZGl2PgoKICA8Zm9vdGVyPlN5bnRoZXRpYyBkYXRhIMK3IG5vIFBISSDCtyBvYnNlcnZlLW9ubHkgwrcgZGV0ZXJtaW5hdGlvbiBsb2dpYyBzZWFsZWQgwrcgU3RlbGxhciBJbmMuIOKAlCBDb25maWRlbnRpYWw8L2Zvb3Rlcj4KPC9kaXY+Cgo8c2NyaXB0PgogIHZhciBEQVRBPXsKICAgIGNuYTpbCiAgICAgIHtpZDonUi0yTi0wMTQnLGR4OidDVkEgdy8gbGVmdCBoZW1pcGFyZXNpcycsbmVlZDonQSBzZWxmLWNhcmUgb2JzZXJ2YXRpb24gZm9yIHRoaXMgc2hpZnQgaXNu4oCZdCBpbiB0aGUgcmVjb3JkIHlldCDigJQgdGhlIGxldmVsIG9mIGhlbHAgbmVlZGVkIHdpdGggZWF0aW5nLCBncm9vbWluZywgYW5kIGRyZXNzaW5nLicsc3RhdGU6J2ZsYWcnLHdpbkg6MTYsCiAgICAgICBiYXNpczonQ05BIG9ic2VydmF0aW9uIG9mIHNlbGYtY2FyZSBwZXJmb3JtYW5jZS4gVGhlIGNsYXNzaWZpY2F0aW9uIGNvZGluZyBpcyB0aGUgTURTIENvb3JkaW5hdG9y4oCZcyDigJQgcm91dGVkIHRvIE1EUywgbm90IGhlcmUuJyxjbGVhcjonU2VsZWN0IHRoZSBsZXZlbCBvZiBoZWxwIHlvdSBzYXcgYW5kIGFkZCBhIGJyaWVmIG5vdGUgaW4gUENDLiBTRU5USU5FTCBjb25maXJtcyBpdCBvbiB0aGUgbmV4dCBjaGVjayDigJQgbm8gYnV0dG9uIGhlcmUuJ30sCiAgICAgIHtpZDonUi0yTi0wMzMnLGR4OidDT1BEIGV4YWNlcmJhdGlvbiwgYW54aWV0eScsbmVlZDonQSBiZWhhdmlvci9zdGF0dXMgY2hhbmdlIChhbnhpb3VzLCBzaG9ydCBvZiBicmVhdGgpIG1heSBub3QgYmUgcmVjb3JkZWQgdGhpcyBzaGlmdCDigJQgPGI+c2VsZWN0IHRoZSBiZWhhdmlvciB5b3Ugb2JzZXJ2ZWQ8L2I+IGFuZCBhZGQgYSBicmllZiBub3RlLicsc3RhdGU6J2ZsYWcnLHdpbkg6MjgsCiAgICAgICBiYXNpczonQ05BIG9ic2VydmF0aW9uIChzZWxlY3QgKyBmcmVlIHRleHQpLiBUaGUgc3RydWN0dXJlZCBudXJzaW5nIGFzc2Vzc21lbnQgaXMgdGhlIGxpY2Vuc2VkIG51cnNl4oCZcyDigJQgcm91dGVkIHRvIHRoZSBOdXJzZSB2aWV3LCBuZXZlciB0byBhIENOQS4nLGNsZWFyOidTZWxlY3QgdGhlIGJlaGF2aW9yIHlvdSBvYnNlcnZlZCBhbmQgYWRkIGEgYnJpZWYgbm90ZSBpbiBQQ0Mg4oCUIGFuIG9ic2VydmF0aW9uLCBub3QgYSBzdHJ1Y3R1cmVkIGFzc2Vzc21lbnQuJ30sCiAgICAgIHtpZDonUi0yTi0wMjEnLGR4OidzL3AgcmlnaHQgaGlwIGZ4LCBPUklGJyxuZWVkOidBbGwgcmVxdWlyZWQgZG9jdW1lbnRhdGlvbiBpcyBwcmVzZW50IGZvciB0aGlzIHNoaWZ0Licsc3RhdGU6J3Bhc3MnLAogICAgICAgYmFzaXM6J0FsbCByZXF1aXJlZCBlbGVtZW50cyBmb3IgdGhlIGNsYXNzaWZpY2F0aW9uIGFyZSBwcmVzZW50IGluIHRoZSByZWNvcmQuJ30sCiAgICAgIHtpZDonUi0yTi0wNTAnLGR4OidzL3AgQ0FCRywgZGVjb25kaXRpb25pbmcnLG5lZWQ6J0FsbCByZXF1aXJlZCBkb2N1bWVudGF0aW9uIGlzIHByZXNlbnQgZm9yIHRoaXMgc2hpZnQuJyxzdGF0ZToncGFzcycsCiAgICAgICBiYXNpczonQWxsIHJlcXVpcmVkIGVsZW1lbnRzIGZvciB0aGUgY2xhc3NpZmljYXRpb24gYXJlIHByZXNlbnQgaW4gdGhlIHJlY29yZC4nfQogICAgXSwKICAgIG51cnNlOlsKICAgICAge2lkOidSLTJOLTAzMycsZHg6J0NPUEQgZXhhY2VyYmF0aW9uLCBhbnhpZXR5JyxzdGF0ZTonZmxhZycsd2luSDoyOCwKICAgICAgIG5lZWQ6J1RoZSByZWNvcmQgc2hvdWxkIHNob3cgYSBudXJzZSBhY3R1YWxseSBsb29rZWQgYXQgdGhpcyByZXNpZGVudCBkdXJpbmcgdGhlIGJyZWF0aGluZyBlcGlzb2RlIOKAlCBob3cgdGhlaXIgYnJlYXRoaW5nIGFuZCBhbnhpZXR5IGxvb2tlZCwgaG93IGJhZCBpdCB3YXMsIGFuZCB3aGF0IHlvdSBkaWQuIFJpZ2h0IG5vdyBpdOKAmXMgb25seSBpbiBhIG5hcnJhdGl2ZSwgd2l0aCBubyBzdHJ1Y3R1cmVkIG51cnNlIG5vdGUgdG8gYmFjayBpdCB1cC4nLAogICAgICAga2V5czpbJ0JyZWF0aGluZyBlZmZvcnQgLyBzaG9ydG5lc3Mgb2YgYnJlYXRoJywnT3h5Z2VuIGxldmVsIChTcE/igoIpICsgT+KCgiBpbiB1c2UnLCdMdW5nIHNvdW5kcywgY291Z2gsIGNvbG9yJywnU2lnbnMgb2YgYW54aWV0eSArIHdoYXQgc2V0IGl0IG9mZicsJ1ZpdGFsIHNpZ25zIGF0IHRoZSB0aW1lJywnV2hhdCB5b3UgZGlkICsgaG93IHRoZXkgcmVzcG9uZGVkJywnUHJvdmlkZXIgbm90aWZpZWQgKyByZXNwb25zZScsJ0RhdGUvdGltZSBvZiB0aGUgYXNzZXNzbWVudCddLAogICAgICAgZnJhbWU6J0RvY3VtZW50IG9ubHkgd2hhdCB5b3UgYXNzZXNzZWQgdGhpcyBzaGlmdCDigJQgU0VOVElORUwgZmxhZ3MgYSBtaXNzaW5nIHN0cnVjdHVyZWQgbm90ZSwgaXQgZG9lc27igJl0IGFzc3VtZSBkaXN0cmVzcyB3YXMgcHJlc2VudC4nLAogICAgICAgY21zUmVmOidGb3IgdGhlIE1EUyBjb2RlcjogUkFJIFNlY3Rpb24gSiAoSjExMDAsIGJyZWF0aGluZykuIEFueGlldHksIGlmIGEgZG9jdW1lbnRlZCBhY3RpdmUgZGlhZ25vc2lzLCBpcyBTZWN0aW9uIEkgKEk1NzAwKSDigJQgYWN1dGUgc2l0dWF0aW9uYWwgYW54aWV0eSBkdXJpbmcgZHlzcG5lYSBoYXMgbm8gZGlzY3JldGUgTURTIG1vb2QgaXRlbS4nfSwKICAgICAge2lkOidSLTJOLTA3MScsZHg6J0RNIHcvIHBlcmlwaGVyYWwgbmV1cm9wYXRoeScsc3RhdGU6J3BlbmQnLAogICAgICAgbmVlZDonVGhpcyByZXNpZGVudOKAmXMgZGlhYmV0aWMgbmVydmUgcHJvYmxlbSBuZWVkcyB0byBzaG93IHVwIGFzIGEgcmVhbCwgYWN0aXZlIGNvbmRpdGlvbiB5b3XigJlyZSBtYW5hZ2luZyDigJQgbnVtYm5lc3Mgb3IgbG9zcyBvZiBmZWVsaW5nIGluIHRoZSBmZWV0LCBvciBuZXJ2ZSBwYWluLCBhbmQgdGhlIGNhcmUgeW91IGdpdmUgZm9yIGl0LiBBIG5vdGUgbWVudGlvbnMgaXQsIGJ1dCBubyBzdHJ1Y3R1cmVkIGVsZW1lbnQgbWF0Y2hlcyB5ZXQsIHNvIGEgY2xpbmljaWFuIGNvbmZpcm1zIHdoZXJlIGl0IGJlbG9uZ3MuJywKICAgICAgIGtleXM6WydEaWFiZXRlcyBub3RlZCBhcyBhY3RpdmUgLyBtYW5hZ2VkJywnTmVydmUgc3ltcHRvbXM6IG51bWJuZXNzLCB0aW5nbGluZywgYnVybmluZywgbG9zcyBvZiBmZWVsaW5nJywnRm9vdCBza2luIGNoZWNrOiBzb3JlcywgY3JhY2tzLCBjb2xvciwgcHVsc2VzJywnUHJvdGVjdGl2ZSBzZW5zYXRpb24gKG1vbm9maWxhbWVudCwgaWYgZG9uZSknLCdOZXJ2ZSBwYWluOiB3aGVyZSwgaG93IGJhZCwgd2hhdCBoZWxwcycsJ1RyZWF0bWVudHM6IGZvb3QgY2FyZSwgZm9vdHdlYXIsIG5lcnZlLXBhaW4gbWVkLCBnbHVjb3NlIGNvbnRyb2wnLCdTYWZldHkgZm9yIG51bWIgZmVldCAoYnVybiAvIGluanVyeSAvIGZhbGwpJywnUHJvdmlkZXIgbm90aWZpZWQgLyBvcmRlcnMnXSwKICAgICAgIGZyYW1lOidEb2N1bWVudCBvbmx5IHdoYXQgeW91IGFzc2Vzc2VkIOKAlCBTRU5USU5FTCBmbGFncyBhIG5hcnJhdGl2ZSB3aXRoIG5vIG1hdGNoaW5nIHN0cnVjdHVyZWQgZWxlbWVudDsgYSBjbGluaWNpYW4gZGVjaWRlcyB3aGVyZSBpdCBiZWxvbmdzIChkaWFnbm9zaXMsIHNraW4vZm9vdCwgb3IgcGFpbikuJywKICAgICAgIGNtc1JlZjonRm9yIHRoZSBNRFMgY29kZXI6IFJBSSBTZWN0aW9uIEkgKEkyOTAwIGRpYWJldGVzIC8gSTgwMDAgbmV1cm9wYXRoeSksIFNlY3Rpb24gTSAoTTEwNDAvTTEyMDAgc2tpbi1mb290KSwgU2VjdGlvbiBKIChwYWluKS4nfQogICAgXSwKICAgIG1kczpbCiAgICAgIHtpZDonUi0yTi0wMTQnLGR4OidDVkEgdy8gbGVmdCBoZW1pcGFyZXNpcycsbmVlZDonU2VjdGlvbiBHRyBmdW5jdGlvbmFsIGxldmVscyBub3QgY2FwdHVyZWQgaW4gYSBzdHJ1Y3R1cmVkIGZpZWxkIOKAlCA8Yj5kcml2ZXMgSElQUFMgS0FGQjE8L2I+Licsc3RhdGU6J2ZsYWcnLHdpbkg6MTYsCiAgICAgICBiYXNpczonUERQTSBQVC9PVCBjbGFzc2lmaWNhdGlvbiDCtyBSQUkgTWFudWFsLCBTZWN0aW9uIEdHLicsY2xlYXI6J0NhcHR1cmUgdGhlIFNlY3Rpb24gR0cgZnVuY3Rpb25hbCBsZXZlbHMgaW4gYSBzdHJ1Y3R1cmVkIGZpZWxkIGluIFBDQy4nfSwKICAgICAge2lkOidSLTJOLTA0NScsZHg6J0NIRjsgbXVsdGlwbGUgY29tb3JiaWRpdGllcycsbmVlZDonTlRBIGNvbW9yYmlkaXR5IGRvY3VtZW50YXRpb24gd2FzIG5vdCBzdWJzdGFudGlhdGVkIGluIHRpbWUg4oCUIHdpbmRvdyBjbG9zZWQuJyxzdGF0ZTonZXhwJywKICAgICAgIGJhc2lzOidOVEEgY29tb3JiaWRpdHkgc2NvcmUgwrcgUkFJIE1hbnVhbCBDaC4gNiwgVGFibGUgMTYuJyxjbGVhcjonV2luZG93IGNsb3NlZCBmb3IgdGhpcyBjbGFpbSBwZXJpb2Qg4oCUIHRoZSBwcmFjdGljZSBjYW4gc3RpbGwgYmUgY29ycmVjdGVkIGdvaW5nIGZvcndhcmQuJ30KICAgIF0KICB9OwogIHZhciBMQUJFTD17ZmxhZzonRmxhZycscGFzczonUGFzcycscGVuZDonUGVuZGluZycsZXhwOidFeHBvc3VyZSd9LENMUz17ZmxhZzonYy1mbGFnJyxwYXNzOidjLXBhc3MnLHBlbmQ6J2MtcGVuZCcsZXhwOidjLWV4cCd9OwogIHZhciB1aWQ9MDsKICBmdW5jdGlvbiBpdGVtSFRNTChpdCl7CiAgICB2YXIgd2luPScnOwogICAgaWYoaXQuc3RhdGU9PT0nZmxhZycpe3ZhciBzb29uPWl0Lndpbkg8PTE4Pycgc29vbic6Jyc7d2luPSc8ZGl2IGNsYXNzPSJ3aW4nK3Nvb24rJyI+Q29ycmVjdGlvbiB3aW5kb3cgwrcgficraXQud2luSCsnaCByZW1haW5pbmc8L2Rpdj4nO30KICAgIGlmKGl0LnN0YXRlPT09J2V4cCcpe3dpbj0nPGRpdiBjbGFzcz0id2luIHNvb24iPldpbmRvdyBjbG9zZWQg4oCUIGRldGVybWluYXRpb24gZmluYWwgZm9yIHRoaXMgcGVyaW9kICh0aGUgcmVjb3JkIHN0YXlzIGFtZW5kYWJsZSk8L2Rpdj4nO30KICAgIHZhciBrbWFwPScnOwogICAgaWYoaXQua2V5cyl7CiAgICAgIHZhciBjaGlwcz1pdC5rZXlzLm1hcChmdW5jdGlvbihrKXt2YXIgc2M9L3NlbGYtaGFybS9pLnRlc3Qoayk/JyBzYWZldHknOicnO3JldHVybiAnPHNwYW4gY2xhc3M9Imt0YWcnK3NjKyciPicraysnPC9zcGFuPic7fSkuam9pbignJyk7CiAgICAgIGttYXA9JzxkaXYgY2xhc3M9ImttYXAiPjxkaXYgY2xhc3M9ImtsYWIiPldoYXQgYSBjb21wbGV0ZSBub3RlIGNvdmVycyAoaWYgeW91IGFzc2Vzc2VkIGl0KTo8L2Rpdj4nK2NoaXBzKyc8L2Rpdj4nOwogICAgICBpZihpdC5mcmFtZSl7a21hcCs9JzxkaXYgY2xhc3M9ImtmcmFtZSI+JytpdC5mcmFtZSsnPC9kaXY+Jzt9CiAgICB9CiAgICB2YXIgZGV0YWlsOwogICAgaWYoaXQuY21zUmVmKXsgZGV0YWlsPSc8ZGl2IGNsYXNzPSJkZXRhaWwiPjxkaXYgY2xhc3M9ImsiPkZvciB0aGUgTURTIGNvZGVyPC9kaXY+JytpdC5jbXNSZWYrJzwvZGl2Pic7IH0KICAgIGVsc2UgeyBkZXRhaWw9JzxkaXYgY2xhc3M9ImRldGFpbCI+PGRpdiBjbGFzcz0iayI+Q01TIGJhc2lzPC9kaXY+JytpdC5iYXNpcysoaXQuY2xlYXI/JzxkaXYgY2xhc3M9ImNsZWFyIj4nKyhpdC5zdGF0ZT09PSdleHAnPyfijJsgJzon4pyTICcpK2l0LmNsZWFyKyc8L2Rpdj4nOicnKSsnPC9kaXY+JzsgfQogICAgcmV0dXJuICc8ZGl2IGNsYXNzPSJpdGVtICcraXQuc3RhdGUrJyIgb25jbGljaz0idG9nKHRoaXMpIj4nKwogICAgICAnPGRpdiBjbGFzcz0idG9wIj48ZGl2PjxkaXYgY2xhc3M9InJpZCI+JytpdC5pZCsnPC9kaXY+PGgzPicraXQuZHgrJzwvaDM+JysKICAgICAgJzxkaXYgY2xhc3M9Im5lZWQiPicraXQubmVlZCsnPC9kaXY+JytrbWFwK3dpbisnPC9kaXY+JysKICAgICAgJzxkaXYgY2xhc3M9InJpZ2h0Ij48c3BhbiBjbGFzcz0iY2hpcCAnK0NMU1tpdC5zdGF0ZV0rJyI+JytMQUJFTFtpdC5zdGF0ZV0rJzwvc3Bhbj4nKwogICAgICAnPHNwYW4gY2xhc3M9ImV4cC1jdWUiPjxzcGFuIGNsYXNzPSJjYXJldCI+4pa4PC9zcGFuPiBkZXRhaWxzPC9zcGFuPjwvZGl2PjwvZGl2PicrZGV0YWlsKyc8L2Rpdj4nOwogIH0KICBmdW5jdGlvbiB0b2coZWwpeyBlbC5jbGFzc0xpc3QudG9nZ2xlKCdvcGVuJyk7IH0KICBmdW5jdGlvbiBzb3J0SXRlbXMoYSl7dmFyIG89e2ZsYWc6MCxwZW5kOjEsZXhwOjIscGFzczozfTtyZXR1cm4gYS5zbGljZSgpLnNvcnQoZnVuY3Rpb24oeCx5KXtyZXR1cm4gb1t4LnN0YXRlXSE9PW9beS5zdGF0ZV0/b1t4LnN0YXRlXS1vW3kuc3RhdGVdOih4Lndpbkh8fDk5KS0oeS53aW5IfHw5OSk7fSk7fQogIGZ1bmN0aW9uIHJlbmRlcigpewogICAgWydjbmEnLCdudXJzZScsJ21kcyddLmZvckVhY2goZnVuY3Rpb24oayl7ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoaysnLWxpc3QnKS5pbm5lckhUTUw9c29ydEl0ZW1zKERBVEFba10pLm1hcChpdGVtSFRNTCkuam9pbignJyk7fSk7CiAgICB2YXIgb2M9REFUQS5jbmEuZmlsdGVyKGZ1bmN0aW9uKGkpe3JldHVybiBpLnN0YXRlPT09J2ZsYWcnO30pLmxlbmd0aDsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdjbmEtY291bnQnKS50ZXh0Q29udGVudD1vYysnIG9wZW4gaW4gdGhlIHdpbmRvdyc7CiAgICB2YXIgbmY9REFUQS5udXJzZS5maWx0ZXIoZnVuY3Rpb24oaSl7cmV0dXJuIGkuc3RhdGU9PT0nZmxhZyc7fSkubGVuZ3RoLG5wPURBVEEubnVyc2UuZmlsdGVyKGZ1bmN0aW9uKGkpe3JldHVybiBpLnN0YXRlPT09J3BlbmQnO30pLmxlbmd0aDsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdudXJzZS1jb3VudCcpLnRleHRDb250ZW50PW5mKycgbmVlZCBhIG51cnNlIMK3ICcrbnArJyBwZW5kaW5nJzsKICAgIHZhciBtYz1EQVRBLm1kcy5maWx0ZXIoZnVuY3Rpb24oaSl7cmV0dXJuIGkuc3RhdGU9PT0nZmxhZyd8fGkuc3RhdGU9PT0nZXhwJzt9KS5sZW5ndGg7CiAgICBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbWRzLWNvdW50JykudGV4dENvbnRlbnQ9bWMrJyBjbGFzc2lmaWNhdGlvbiBpdGVtcyc7CiAgfQogIGZ1bmN0aW9uIHRhYih0KXsKICAgIGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3JBbGwoJy50YWInKS5mb3JFYWNoKGZ1bmN0aW9uKHgpe3guY2xhc3NMaXN0LnRvZ2dsZSgnb24nLHguZ2V0QXR0cmlidXRlKCdkYXRhLXQnKT09PXQpO30pOwogICAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbCgnLnZpZXcnKS5mb3JFYWNoKGZ1bmN0aW9uKHgpe3guY2xhc3NMaXN0LnJlbW92ZSgnb24nKTt9KTsKICAgIGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCd2LScrdCkuY2xhc3NMaXN0LmFkZCgnb24nKTsKICB9CiAgZnVuY3Rpb24gc2ltUnVuKCl7CiAgICBbJ2NuYSddLmZvckVhY2goZnVuY3Rpb24oayl7REFUQVtrXS5mb3JFYWNoKGZ1bmN0aW9uKGkpe2lmKGkuaWQ9PT0nUi0yTi0wMTQnJiZpLnN0YXRlPT09J2ZsYWcnKXtpLnN0YXRlPSdwYXNzJztpLm5lZWQ9J1RoZSBzZWxmLWNhcmUgb2JzZXJ2YXRpb24gaXMgbm93IGluIHRoZSByZWNvcmQgZm9yIHRoaXMgc2hpZnQuJztpLmJhc2lzPSdUaGUgb2JzZXJ2YXRpb24gdGhlIHNoaWZ0IG5lZWRlZCBpcyBvbiBmaWxlLic7ZGVsZXRlIGkud2luSDtkZWxldGUgaS5jbGVhcjt9fSk7fSk7CiAgICByZW5kZXIoKTsKICAgIHZhciByPWRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyZXN1bHQnKTtyLmNsYXNzTGlzdC5hZGQoJ29uJyk7CiAgICByLmlubmVySFRNTD0n4pyTIE9uIHRoZSBuZXh0IGNoZWNrLCBSLTJOLTAxNCBjbGVhcmVkIDxiIHN0eWxlPSJjb2xvcjp2YXIoLS1nb2xkKSI+RmxhZzwvYj4g4oaSIDxiIHN0eWxlPSJjb2xvcjp2YXIoLS1ncmVlbikiPlBhc3M8L2I+IOKAlCBpbiB0aGUgd2luZG93LiBObyBidXR0b24gd2FzIHByZXNzZWQuIFRoZSBNRFMgY2xhc3NpZmljYXRpb24gaXRlbSBzdGF5cyBvcGVuIOKAlCBpdOKAmXMgYSBzZXBhcmF0ZSBlbnRyeSBieSB0aGUgTURTIGNvZGVyLic7CiAgfQogIGZ1bmN0aW9uIHJlc2V0U2ltKCl7CiAgICBEQVRBLmNuYVswXT17aWQ6J1ItMk4tMDE0JyxkeDonQ1ZBIHcvIGxlZnQgaGVtaXBhcmVzaXMnLG5lZWQ6J0Egc2VsZi1jYXJlIG9ic2VydmF0aW9uIGZvciB0aGlzIHNoaWZ0IGlzbuKAmXQgaW4gdGhlIHJlY29yZCB5ZXQg4oCUIHRoZSBsZXZlbCBvZiBoZWxwIG5lZWRlZCB3aXRoIGVhdGluZywgZ3Jvb21pbmcsIGFuZCBkcmVzc2luZy4nLHN0YXRlOidmbGFnJyx3aW5IOjE2LGJhc2lzOidDTkEgb2JzZXJ2YXRpb24gb2Ygc2VsZi1jYXJlIHBlcmZvcm1hbmNlLiBUaGUgY2xhc3NpZmljYXRpb24gY29kaW5nIGlzIHRoZSBNRFMgQ29vcmRpbmF0b3LigJlzIOKAlCByb3V0ZWQgdG8gTURTLCBub3QgaGVyZS4nLGNsZWFyOidTZWxlY3QgdGhlIGxldmVsIG9mIGhlbHAgeW91IHNhdyBhbmQgYWRkIGEgYnJpZWYgbm90ZSBpbiBQQ0MuIFNFTlRJTkVMIGNvbmZpcm1zIGl0IG9uIHRoZSBuZXh0IGNoZWNrIOKAlCBubyBidXR0b24gaGVyZS4nfTsKICAgIERBVEEubWRzWzBdPXtpZDonUi0yTi0wMTQnLGR4OidDVkEgdy8gbGVmdCBoZW1pcGFyZXNpcycsbmVlZDonU2VjdGlvbiBHRyBmdW5jdGlvbmFsIGxldmVscyBub3QgY2FwdHVyZWQgaW4gYSBzdHJ1Y3R1cmVkIGZpZWxkIOKAlCA8Yj5kcml2ZXMgSElQUFMgS0FGQjE8L2I+Licsc3RhdGU6J2ZsYWcnLHdpbkg6MTYsYmFzaXM6J1BEUE0gUFQvT1QgY2xhc3NpZmljYXRpb24gwrcgUkFJIE1hbnVhbCwgU2VjdGlvbiBHRy4nLGNsZWFyOidDYXB0dXJlIHRoZSBTZWN0aW9uIEdHIGZ1bmN0aW9uYWwgbGV2ZWxzIGluIGEgc3RydWN0dXJlZCBmaWVsZCBpbiBQQ0MuJ307CiAgICByZW5kZXIoKTtkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncmVzdWx0JykuY2xhc3NMaXN0LnJlbW92ZSgnb24nKTsKICB9CiAgcmVuZGVyKCk7Cjwvc2NyaXB0Pgo8L2JvZHk+CjwvaHRtbD4K";
+</script>
+
+<!--MOBILE-NAV-v1-->
+<div id="mnav">
+  <button id="mprev" aria-label="Previous slide">&#8249;</button>
+  <span class="mcount" id="mcount"></span>
+  <button id="mnext" aria-label="Next slide">&#8250;</button>
+</div>
+<div id="rotate">
+  <div class="icn">&#8635;</div>
+  <div class="t">Turn your phone sideways</div>
+  <div class="s">This deck is widescreen. Rotate to landscape for the full-size view &mdash; or tap Continue to keep going in portrait.</div>
+  <button id="rotok">Continue anyway</button>
+</div>
+<script>
+(function(){
+  if(window.__mnavInit)return; window.__mnavInit=true;
+  var deckEl=document.getElementById('deck')||document.body;
+  function key(k){document.dispatchEvent(new KeyboardEvent('keydown',{key:k,bubbles:true,cancelable:true}));}
+  function next(){key('ArrowRight');} function prev(){key('ArrowLeft');}
+  var sx=0,sy=0,tr=false;
+  deckEl.addEventListener('touchstart',function(e){if(e.touches.length!==1)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;tr=true;},{passive:true});
+  deckEl.addEventListener('touchend',function(e){if(!tr)return;tr=false;var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.4){dx<0?next():prev();}},{passive:true});
+  document.getElementById('mnext').onclick=next;
+  document.getElementById('mprev').onclick=prev;
+  var src=document.getElementById('counter')||document.getElementById('pgnum');
+  var mc=document.getElementById('mcount');
+  function curCount(){
+    if(src){var t=(src.textContent||'').trim(); if(t)return t;}
+    var sl=document.querySelectorAll('.slide'),idx=0;
+    for(var j=0;j<sl.length;j++){if(sl[j].classList.contains('active')||sl[j].classList.contains('on')){idx=j;break;}}
+    return sl.length?((idx+1)+' / '+sl.length):'';
+  }
+  function sync(){if(mc)mc.textContent=curCount();}
+  if(src){try{new MutationObserver(sync).observe(src,{childList:true,characterData:true,subtree:true});}catch(e){}}
+  document.addEventListener('keydown',function(){setTimeout(sync,10);});
+  deckEl.addEventListener('touchend',function(){setTimeout(sync,10);},{passive:true});
+  setTimeout(sync,60);
+  var rot=document.getElementById('rotate'),dismissed=false;
+  function isPP(){return window.matchMedia('(pointer:coarse)').matches&&window.innerHeight>window.innerWidth&&window.innerWidth<620;}
+  function chk(){if(dismissed)return;rot.style.display=isPP()?'flex':'none';}
+  document.getElementById('rotok').onclick=function(){dismissed=true;rot.style.display='none';};
+  window.addEventListener('resize',chk);window.addEventListener('orientationchange',chk);chk();
+})();
+</script>
+
+</body>
+</html>
