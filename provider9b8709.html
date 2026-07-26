@@ -321,7 +321,7 @@
       h+='<div class="dtext" style="margin-top:.8cqh;color:var(--faint)">No open classification flag to map — nothing to dispute here.</div>';
     } else {
       h+='<div class="dlabel" style="color:var(--'+stcol+')">'+stlabel+'</div><div class="dtext">'+r.flag+'</div>';
-      if(r.money){h+='<div class="dmoney">'+r.money+'</div>';}
+      if(r.money){h+='<div class="dmoney">Est. '+r.money+'</div><div class="dtext" style="font-size:.82cqw;color:var(--faint);margin-top:.4cqh">Illustrative estimate — potential reimbursement at risk, not a measured or guaranteed amount.</div>';}
     }
     det.innerHTML=h;
   }
