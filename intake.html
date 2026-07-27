@@ -16,13 +16,17 @@
     - The ONLY outbound call is the form submission itself, and ONLY when the
       visitor presses Send.
   ----------------------------------------------------------------------------
-  >>> ACTION REQUIRED BEFORE GO-LIVE <<<
-  The <form action="__FORM_ENDPOINT__"> below is a PLACEHOLDER. It MUST be
-  replaced with the real form-relay endpoint (e.g. a Formspree / Basin /
-  Formspark form URL) chosen per SENTINEL_QR_Intake_Workflow_and_BuildPlan.md,
-  AND the mailto: fallback address confirmed, BEFORE this page is deployed and
-  BEFORE any QR code is generated. Until the endpoint is wired, the page still
-  works: the visible "email me directly" mailto link is the fallback path.
+  BACKEND — Tenant-native (2026-07-27): the form submits to a Microsoft
+  Power Automate "When an HTTP request is received" endpoint inside Stellar's
+  own Microsoft 365 tenant. No third-party form processor. The flow emails the
+  submission to the intake mailbox (and can later also write it to the
+  SENTINEL client record). See the M365 flow runbook.
+
+  WIRED 2026-07-27: the form posts to the Power Automate HTTP endpoint in
+  Stellar's own tenant. The submit uses fetch mode:'no-cors' (Content-Type
+  text/plain), so the flow needs NO Response/CORS action — the browser fires the
+  POST, the flow receives it and emails intake@, and the visitor sees the success
+  state. The intake@ email is the authoritative receipt.
   ============================================================================
 -->
 <style>
@@ -93,6 +97,7 @@
     background:var(--green);border:none;border-radius:10px;padding:14px 18px;
     cursor:pointer;transition:filter .15s}
   button:hover{filter:brightness(1.07)}
+  button:disabled{filter:saturate(.4) brightness(.9);cursor:default}
 
   .fallback{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);
     font-size:14px;color:var(--dim);text-align:center}
@@ -118,13 +123,13 @@
 
   <main class="card">
 
-    <!-- Success state (revealed by JS on a successful AJAX submit) -->
+    <!-- Success state (revealed by JS on a successful submit) -->
     <div id="ok" class="status ok" role="status" aria-live="polite" hidden>
       <b>Thank you — your note reached me.</b> I read these myself and will get back to you
       personally, usually within a business day.
     </div>
 
-    <!-- Error state (revealed by JS if the AJAX submit fails) -->
+    <!-- Error state (revealed by JS if the submit fails) -->
     <div id="err" class="status err" role="alert" aria-live="assertive" hidden>
       <b>That didn't go through.</b> Your message hasn't been sent yet — please try again in a
       moment, or refresh the page and resend.
@@ -137,11 +142,13 @@
         than I need to have a useful first conversation.</p>
 
       <!--
-        LIVE ENDPOINT — Basin form relay (wired 2026-07-27). Notifications route to the
-        address configured in the Basin dashboard. method="POST" so the page still submits
-        with JavaScript disabled (progressive enhancement); JS upgrades to inline states.
+        LIVE ENDPOINT — Microsoft Power Automate (tenant-native, wired 2026-07-27).
+        Submissions land in Stellar's own M365 tenant: the flow records the client
+        entry and notifies the intake mailbox. method="POST" is kept for
+        progressive enhancement; JS upgrades to a CORS-safe background submit with
+        inline success/error states so the visitor never leaves this page.
       -->
-      <form id="intake" action="https://usebasin.com/f/a1ab626623f3" method="POST" novalidate>
+      <form id="intake" action="https://defaulta55ca07fc4344bfa811873ab48463e.ca.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/03/workflows/864c4796cca94790a9af4a518c3af663/triggers/manual/paths/invoke?api-version=1&amp;sp=%2Ftriggers%2Fmanual%2Frun&amp;sv=1.0&amp;sig=EHmHAmIkw2bOzgj6K8n3gOH3iVV6LWy0QLraJCKmrNI" method="POST" novalidate>
 
         <div class="field">
           <label for="name">Your name <span class="req" aria-hidden="true">*</span></label>
@@ -210,8 +217,6 @@
 
   <footer>
     © 2026 Stellar Inc. · SENTINEL is a trademark of Stellar Inc.<br>
-    <!-- DECISION (d): if a privacy-policy link is required on the form, it goes here:
-         <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a> -->
     Your details are used only to reply to you. See our
     <a href="/privacy.html">Privacy Policy</a>.
   </footer>
@@ -220,49 +225,61 @@
 
 <script>
 /* Progressive enhancement only. With JavaScript OFF, the form still POSTs to the
-   endpoint (or the mailto fallback link remains usable). This script adds:
-     1) honeypot check, 2) inline success/error states via a background submit,
-   so the visitor never leaves the SENTINEL-branded page. No external calls here. */
+   Power Automate endpoint (form-urlencoded). With JS ON, this script adds:
+     1) native validation, 2) honeypot check, 3) a CORS-safe background submit
+        that posts a JSON body as text/plain (a "simple request", so no CORS
+        preflight is triggered), showing inline success/error without leaving
+        this SENTINEL-branded page.
+   No external calls here other than the submission itself. */
 (function(){
   var form = document.getElementById('intake');
   if(!form) return;
   var okBox = document.getElementById('ok');
   var errBox = document.getElementById('err');
   var zone  = document.getElementById('formzone');
+  var btn   = form.querySelector('button[type=submit]');
+  var val = function(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+
+  function showErr(){
+    if(btn){ btn.disabled = false; btn.textContent = 'Send to Toni'; }
+    errBox.hidden = false;
+    errBox.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  function showOk(){
+    zone.hidden = true; okBox.hidden = false; window.scrollTo(0,0);
+  }
 
   form.addEventListener('submit', function(e){
-    // Native HTML5 validation first (required fields, email format).
-    if(!form.checkValidity()){
-      form.reportValidity();
-      e.preventDefault();
-      return;
-    }
-    // Honeypot: a real person leaves this empty. If filled, silently accept-and-drop.
-    var hp = form.querySelector('[name="company_website"]');
-    if(hp && hp.value.trim() !== ''){
-      e.preventDefault();
-      zone.hidden = true; okBox.hidden = false;
-      return;
-    }
-    // If the endpoint is still the placeholder, don't fire a broken request —
-    // guide the visitor to the mailto fallback instead.
-    if(form.getAttribute('action').indexOf('__FORM_ENDPOINT__') !== -1){
-      e.preventDefault();
-      errBox.hidden = false;
-      errBox.scrollIntoView({behavior:'smooth', block:'center'});
-      return;
-    }
-    // Live endpoint: submit in the background so we can show inline states.
     e.preventDefault();
-    var data = new FormData(form);
-    fetch(form.action, { method:'POST', body:data, headers:{'Accept':'application/json'} })
-      .then(function(r){
-        if(r.ok){ zone.hidden = true; okBox.hidden = false; window.scrollTo(0,0); }
-        else { errBox.hidden = false; errBox.scrollIntoView({behavior:'smooth',block:'center'}); }
-      })
-      .catch(function(){
-        errBox.hidden = false; errBox.scrollIntoView({behavior:'smooth',block:'center'});
-      });
+    // 1) Native HTML5 validation (required fields, email format).
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    // 2) Honeypot: a real person leaves this blank. If filled, accept-and-drop silently.
+    var hp = document.getElementById('company_website');
+    if(hp && hp.value.trim() !== ''){ showOk(); return; }
+
+    var payload = {
+      name:         val('name'),
+      organization: val('org'),
+      email:        val('email'),
+      message:      val('message'),
+      consent:      (document.getElementById('consent') || {}).checked ? 'yes' : 'no',
+      submittedAt:  new Date().toISOString(),
+      source:       'stellarclinical.com/intake'
+    };
+    if(btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+
+    // mode:'no-cors' fires the POST without needing any CORS response header
+    // from the flow. The response is opaque (we can't read status), so we treat
+    // a completed send as success — the intake@ email is the real receipt.
+    // .catch fires only on a genuine network failure.
+    fetch(form.getAttribute('action'), {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(){ showOk(); })
+    .catch(function(){ showErr(); });
   });
 })();
 </script>
