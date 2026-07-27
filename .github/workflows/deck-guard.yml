@@ -83,11 +83,15 @@ jobs:
               if re.search(r'href=["\x27]mailto:', raw):
                   problems.append(f"{f}: contains a mailto: link - contact must route to the intake form only")
 
-          # ---- The form must exist and be wired ----
+          # ---- The form must exist and be wired to the tenant-native (Power Automate) endpoint ----
           if os.path.exists("intake.html"):
               it = open("intake.html", encoding="utf-8", errors="ignore").read()
-              if "usebasin.com/f/" not in it:
-                  problems.append("intake.html: form endpoint (usebasin.com/f/...) missing - the form isn't wired")
+              if "usebasin.com" in it:
+                  problems.append("intake.html: still references usebasin.com - Basin was retired; the form must post to the Power Automate endpoint")
+              if "__POWER_AUTOMATE_URL__" in it:
+                  problems.append("intake.html: endpoint is still the __POWER_AUTOMATE_URL__ placeholder - the Power Automate flow URL isn't wired")
+              if ("logic.azure.com" not in it) and ("powerplatform.com" not in it):
+                  problems.append("intake.html: Power Automate endpoint (logic.azure.com / powerplatform.com) missing - the form isn't wired to the tenant-native flow")
           else:
               problems.append("intake.html: MISSING - the contact form is the only route and must exist")
 
