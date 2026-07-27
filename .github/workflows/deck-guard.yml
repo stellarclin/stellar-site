@@ -1,14 +1,14 @@
-# SENTINEL — Deck & Demo Integrity CI Guard
+# SENTINEL — Deck, Demo & Contact-Routing Integrity CI Guard
 # Install at: .github/workflows/deck-guard.yml  in  stellarclin/stellar-site
 #
-# Purpose: move demo verification to the PUBLISH ENDPOINT. On every push that touches a
-# deck file, this decodes the base64-embedded interactive demo and FAILS the check if any
-# deck carries a retired marker or is missing a required marker of the current
-# keyword-mapping demo. A failed check shows a red X on the commit and (if set as a required
-# status check in branch protection) can block the merge — so a stale deck cannot silently
-# reach the live site the way it did on 2026-07-26.
-#
-# No dependencies: uses only Python 3 (preinstalled on ubuntu-latest). Self-contained.
+# Runs on every push that touches a deck, the homepage, the intake page, or the QR redirect.
+# Fails the check (red X on the commit) if any of these regress:
+#   - a deck carries retired terminology or a stale/missing role-view demo;
+#   - ANY public surface (home, intake, decks) exposes an email address or a mailto: link
+#     (contact must route to the intake form ONLY);
+#   - the intake page is not wired to the form relay;
+#   - the /go QR redirect no longer forwards to /intake.
+# Self-contained: Python 3 only (preinstalled on ubuntu-latest).
 
 name: Deck & Demo Integrity
 
@@ -18,68 +18,93 @@ on:
       - "investor*.html"
       - "provider*.html"
       - "team*.html"
+      - "index.html"
+      - "intake.html"
+      - "go.html"
   pull_request:
     paths:
       - "investor*.html"
       - "provider*.html"
       - "team*.html"
-  workflow_dispatch: {}   # allow manual run from the Actions tab
+      - "index.html"
+      - "intake.html"
+      - "go.html"
+  workflow_dispatch: {}
 
 jobs:
   deck-guard:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify deck demos are current
+      - name: Verify decks, demos, and contact routing
         run: |
           python3 - <<'PY'
-          import re, base64, glob, sys
+          import re, base64, glob, sys, os
 
+          # (1) UNIVERSAL retired terminology — must NOT appear in any deck (slides or decoded demo).
           RETIRED_UNIVERSAL = ["POC v1", "assignment group", "med-cart",
                                "WOW browser", "nursing-station board", "shared board"]
-
+          # (2) TEAM role-view demo (base64 DEMO_B64) markers — required present / forbidden.
           DEMO_REQUIRED = ["ktag", "R-2N-071"]
-          DEMO_FORBIDDEN = ["R-1S-071", "R−" + "1S-071", "POC v1", "case-mix substantiation"]
+          DEMO_FORBIDDEN = ["R-1S-071", "R−1S-071", "POC v1", "case-mix substantiation"]
 
           deck_files = sorted(set(
               glob.glob("investor*.html") + glob.glob("provider*.html") + glob.glob("team*.html")
           ))
-          if not deck_files:
-              print("No deck files found to check."); sys.exit(0)
-
           problems = []
+
+          # ---- Deck & demo integrity (decodes base64 demo before scanning) ----
           for f in deck_files:
               raw = open(f, encoding="utf-8", errors="ignore").read()
               parts = [raw]
               for m in re.findall(r'DEMO_B64="([^"]+)"', raw):
-                  try:
-                      parts.append(base64.b64decode(m).decode("utf-8", "ignore"))
-                  except Exception:
-                      problems.append(f"{f}: DEMO_B64 blob failed to decode")
+                  try: parts.append(base64.b64decode(m).decode("utf-8", "ignore"))
+                  except Exception: problems.append(f"{f}: DEMO_B64 blob failed to decode")
               blob = "\n".join(parts)
-
               for bad in RETIRED_UNIVERSAL:
-                  if bad in blob:
-                      problems.append(f"{f}: contains RETIRED terminology {bad!r}")
-
+                  if bad in blob: problems.append(f"{f}: contains RETIRED terminology {bad!r}")
               if f.startswith("team") and 'DEMO_B64="' not in raw:
                   problems.append(f"{f}: team deck is MISSING its DEMO_B64 role-view demo (stripped/blank)")
-
               if 'DEMO_B64="' in raw:
                   for need in DEMO_REQUIRED:
-                      if need not in blob:
-                          problems.append(f"{f}: role-view demo MISSING required marker {need!r} (stale/incomplete)")
+                      if need not in blob: problems.append(f"{f}: role-view demo MISSING required marker {need!r} (stale)")
                   for bad in DEMO_FORBIDDEN:
-                      if bad in blob:
-                          problems.append(f"{f}: role-view demo contains stale marker {bad!r}")
+                      if bad in blob: problems.append(f"{f}: role-view demo contains stale marker {bad!r}")
+
+          # ---- Contact-routing invariants: form-only, no exposed email ----
+          # Every public surface must funnel to the intake form and expose NO email address / mailto link.
+          contact_surfaces = sorted(set(
+              deck_files + [f for f in ["index.html", "intake.html"] if os.path.exists(f)]
+          ))
+          for f in contact_surfaces:
+              raw = open(f, encoding="utf-8", errors="ignore").read()
+              if "@stellarclinical.com" in raw:
+                  problems.append(f"{f}: exposes an @stellarclinical.com email - contact must route to the intake form only")
+              if re.search(r'href=["\x27]mailto:', raw):
+                  problems.append(f"{f}: contains a mailto: link - contact must route to the intake form only")
+
+          # ---- The form must exist and be wired ----
+          if os.path.exists("intake.html"):
+              it = open("intake.html", encoding="utf-8", errors="ignore").read()
+              if "usebasin.com/f/" not in it:
+                  problems.append("intake.html: form endpoint (usebasin.com/f/...) missing - the form isn't wired")
+          else:
+              problems.append("intake.html: MISSING - the contact form is the only route and must exist")
+
+          # ---- The /go QR redirect must forward to /intake ----
+          if os.path.exists("go.html"):
+              g = open("go.html", encoding="utf-8", errors="ignore").read()
+              if "/intake" not in g:
+                  problems.append("go.html: redirect no longer points at /intake")
+          else:
+              problems.append("go.html: MISSING - the QR redirect target must exist")
 
           if problems:
-              print("DECK GUARD FAILED — do not publish:")
+              print("GUARD FAILED - do not publish:")
               for p in problems:
                   print("  -", p)
               sys.exit(1)
-          print(f"Deck guard passed: {len(deck_files)} deck(s) current and correct.")
-          for f in deck_files:
-              print("  ✓", f)
+          print("Guard passed: decks current, contact routes to the form, no email exposed.")
+          for f in sorted(set(deck_files + contact_surfaces + ["go.html"])):
+              if os.path.exists(f): print("  ✓", f)
           PY
-
